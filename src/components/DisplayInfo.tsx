@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { User } from "./UserInput";
 import "./DisplayInfo.scss";
 import logo from "./../logo.svg";
@@ -11,7 +11,13 @@ interface Props {
 const DisplayInfo = ({ users, onDelete }: Props) => {
   // const setTexTColor = (age: number) => (age > 9 ? "red" : "green");
 
-  const [isShow, setIsShow] = useState(false);
+  const [isShow, setIsShow] = useState(true);
+
+  useEffect(() => {
+    if (users.length === 0) setIsShow(false);
+
+    console.log("DisplayInfo useEffect");
+  }, [users]); // just run one times when use []
 
   return (
     // <ul>
