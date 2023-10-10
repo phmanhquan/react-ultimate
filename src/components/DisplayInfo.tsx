@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { User } from "./UserInput";
+import "./DisplayInfo.scss";
 
 interface Props {
   users: User[];
@@ -23,7 +24,7 @@ const DisplayInfo = ({ users }: Props) => {
     //   })}
     // </ul>
 
-    <div>
+    <div className="display-info-container">
       <div>
         <button onClick={() => setIsShow(!isShow)}>
           {isShow ? "Hide" : "Show"}
@@ -35,7 +36,8 @@ const DisplayInfo = ({ users }: Props) => {
             return (
               <div
                 key={user.id}
-                style={{ color: user.age > 9 ? "red" : "green" }}
+                className={user.age > 9 ? "red" : "green"}
+                // style={{ color: user.age > 9 ? "red" : "green" }}
               >
                 <div> My name's {user.name}</div>
                 <div> My age's {user.age}</div>
