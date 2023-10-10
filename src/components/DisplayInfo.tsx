@@ -5,9 +5,10 @@ import logo from "./../logo.svg";
 
 interface Props {
   users: User[];
+  onDelete: (id: number) => void;
 }
 
-const DisplayInfo = ({ users }: Props) => {
+const DisplayInfo = ({ users, onDelete }: Props) => {
   // const setTexTColor = (age: number) => (age > 9 ? "red" : "green");
 
   const [isShow, setIsShow] = useState(false);
@@ -43,6 +44,7 @@ const DisplayInfo = ({ users }: Props) => {
               >
                 <div> My name's {user.name}</div>
                 <div> My age's {user.age}</div>
+                <button onClick={() => onDelete(user.id)}>Delete</button>
                 <br />
               </div>
             );
