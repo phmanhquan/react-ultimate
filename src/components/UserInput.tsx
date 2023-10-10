@@ -7,8 +7,13 @@ export interface User {
   age: number;
 }
 
-const UserInput = () => {
+interface Props {
+  onSubmit: (user: User) => void;
+}
+
+const UserInput = ({ onSubmit }: Props) => {
   const [user, setUser] = useState({
+    id: 1,
     name: "tí đù",
     address: "gầm cầu house",
     age: 11,
@@ -26,7 +31,7 @@ const UserInput = () => {
 
   const handleOnSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log(user);
+    // console.log(user);
   };
 
   const handleOnChangeInput = (value: string) => {
@@ -55,7 +60,7 @@ const UserInput = () => {
           value={user.age}
           onChange={(event) => handleOnChangeAge(event.target.value)}
         />
-        <button>Submit</button>
+        <button onClick={() => onSubmit(user)}>Submit</button>
       </form>
     </>
   );
