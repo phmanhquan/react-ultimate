@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { User } from "./UserInput";
 import "./DisplayInfo.scss";
+import logo from "./../logo.svg";
 
 interface Props {
   users: User[];
@@ -25,6 +26,7 @@ const DisplayInfo = ({ users }: Props) => {
     // </ul>
 
     <div className="display-info-container">
+      <img src={logo} alt="logo" />
       <div>
         <button onClick={() => setIsShow(!isShow)}>
           {isShow ? "Hide" : "Show"}
