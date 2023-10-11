@@ -1,10 +1,11 @@
 import "./App.scss";
+import Header from "./components/Header/Header";
 // import MyComponent from "./components/MyComponent";
 
 function App() {
   return (
-    <div className="apps">
-      Work with state
+    <div className="app-container">
+      <Header></Header>
       {/* <MyComponent></MyComponent> */}
     </div>
   );
