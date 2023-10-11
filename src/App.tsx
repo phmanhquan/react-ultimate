@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import "./App.scss";
 import Header from "./components/Header/Header";
 // import MyComponent from "./components/MyComponent";
@@ -6,18 +6,16 @@ import Header from "./components/Header/Header";
 function App() {
   return (
     <div className="app-container">
-      <Header></Header>
-      <div>
-        test link
-        <div>
-          <button>
-            <Link to="/user">go user</Link>
-          </button>
-          <button>
-            <Link to="/admin">go admin</Link>
-          </button>
+      <div className="header-container">
+        <Header></Header>
+      </div>
+      <div className="main-container">
+        <div className="sidebar-container"></div>
+        <div className="app-content">
+          <Outlet />
         </div>
       </div>
+
       {/* <MyComponent></MyComponent> */}
     </div>
   );
