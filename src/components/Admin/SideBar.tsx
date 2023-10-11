@@ -7,14 +7,12 @@ import {
   SidebarHeader,
   SubMenu,
 } from "react-pro-sidebar";
-import {
-  FaTachometerAlt,
-  FaGem,
-  FaGithub,
-  FaRegLaughWink,
-} from "react-icons/fa";
+import { FaGem, FaGithub } from "react-icons/fa";
+import { DiReact } from "react-icons/di";
 import sidebarBg from "../../assets/bg2.jpg";
 import "react-pro-sidebar/dist/css/styles.css";
+import { MdDashboard } from "react-icons/md";
+import "./SideBar.scss";
 
 interface Props {
   collapsed?: boolean;
@@ -45,28 +43,20 @@ const SideBar = ({ collapsed, toggled, handleToggleSidebar }: Props) => {
               whiteSpace: "nowrap",
             }}
           >
-            React Ultimate
+            <DiReact size={"3em"} color={"00bfff"} />
+            <span>React Ultimate</span>
           </div>
         </SidebarHeader>
 
         <SidebarContent>
           <Menu iconShape="circle">
-            <MenuItem
-              icon={<FaTachometerAlt />}
-              suffix={<span className="badge red">New</span>}
-            >
-              Dashboard
-            </MenuItem>
-            <MenuItem icon={<FaGem />}>components</MenuItem>
+            <MenuItem icon={<MdDashboard />}>Dashboard</MenuItem>
           </Menu>
           <Menu iconShape="circle">
-            <SubMenu
-              suffix={<span className="badge yellow">3</span>}
-              icon={<FaRegLaughWink />}
-            >
-              <MenuItem> 1</MenuItem>
-              <MenuItem> 2</MenuItem>
-              <MenuItem> 3</MenuItem>
+            <SubMenu icon={<FaGem />} title="Features">
+              <MenuItem> Quản lý Users</MenuItem>
+              <MenuItem> Quản lý Bài Quiz</MenuItem>
+              <MenuItem> Quản lý Câu Hỏi</MenuItem>
             </SubMenu>
           </Menu>
         </SidebarContent>
@@ -79,7 +69,7 @@ const SideBar = ({ collapsed, toggled, handleToggleSidebar }: Props) => {
             }}
           >
             <a
-              href="https://github.com/azouaoui-med/react-pro-sidebar"
+              href="https://github.com/phmanhquan/react-ultimate"
               target="_blank"
               className="sidebar-btn"
               rel="noopener noreferrer"
@@ -92,13 +82,12 @@ const SideBar = ({ collapsed, toggled, handleToggleSidebar }: Props) => {
                   overflow: "hidden",
                 }}
               >
-                ViewSource
+                View Source
               </span>
             </a>
           </div>
         </SidebarFooter>
       </ProSidebar>
-      )
     </>
   );
 };
