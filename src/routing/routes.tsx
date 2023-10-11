@@ -12,9 +12,9 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage></HomePage> },
       { path: "users", element: <User></User> },
-      { path: "admins", element: <Admin></Admin> },
     ],
   },
+  { path: "admins", element: <Admin></Admin> },
 ]);
 
 export default router;
