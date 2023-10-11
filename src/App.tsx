@@ -1,14 +1,12 @@
 import "./App.scss";
-import MyComponent from "./components/MyComponent";
+// import MyComponent from "./components/MyComponent";
 
 function App() {
   return (
-    <>
-      <div>
-        Work with state
-        <MyComponent></MyComponent>
-      </div>
-    </>
+    <div className="apps">
+      Work with state
+      {/* <MyComponent></MyComponent> */}
+    </div>
   );
 }
 
