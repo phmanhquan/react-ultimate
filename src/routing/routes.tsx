@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import User from "../components/User/User";
 import Admin from "../components/Admin/Admin";
+import HomePage from "../components/Home/HomePage";
 
 const router = createBrowserRouter([
   {
@@ -9,9 +10,9 @@ const router = createBrowserRouter([
     element: <App></App>,
     // errorElement: <ErrorPage />,
     children: [
-      // { index: true, element: <App></App> },
-      { path: "user", element: <User></User> },
-      { path: "admin", element: <Admin></Admin> },
+      { index: true, element: <HomePage></HomePage> },
+      { path: "users", element: <User></User> },
+      { path: "admins", element: <Admin></Admin> },
     ],
   },
 ]);

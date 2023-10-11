@@ -1,3 +1,23 @@
+
+.app-container {
+    .header-container{
+        .navbar-nav{
+          .nav-link{
+           &.active{
+            color:blue
+            }
+            }
+        }
+
+
+        // .navbar-nav .nav-link.active{
+        //     color:blue
+        // }
+    }
+}
+
+
+
 // #root {
 //   max-width: 1280px;
 //   margin: 0 auto;
