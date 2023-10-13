@@ -1,20 +1,21 @@
+import axios from "axios";
 import { useState } from "react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { FcPlus } from "react-icons/fc";
 
-const ModalCreateUser = () => {
-  const [show, setShow] = useState(false);
+interface Props {
+  show: boolean;
+  onHide: () => void;
+}
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
+const ModalCreateUser = ({ show, onHide }: Props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("USER");
-  const [image, setImage] = useState<File>();
+  const [image, setImage] = useState<string | Blob>("");
   const [previewImage, setPreviewImage] = useState("");
 
   const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,15 +27,42 @@ const ModalCreateUser = () => {
     }
   };
 
+  const handleSubmit = async () => {
+    const data = new FormData();
+    data.append("username", username);
+    data.append("password", password);
+    data.append("email", email);
+    data.append("role", role);
+    data.append("userImage", image);
+
+    const res = await axios.post(
+      "http://localhost:8081/api/v1/participant",
+      data
+    );
+
+    console.log(res);
+    handleClose();
+  };
+
+  const handleClose = () => {
+    onHide();
+    setUsername("");
+    setPassword("");
+    setEmail("");
+    setRole("USER");
+    // setImage();
+    setPreviewImage("");
+  };
+
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      {/* <Button variant="primary" onClick={handleShow}>
         Launch demo modal
-      </Button>
+      </Button> */}
 
       <Modal
         show={show}
-        onHide={handleClose}
+        onHide={() => handleClose()}
         backdrop="static"
         className="modal-add-user"
       >
@@ -101,10 +129,10 @@ const ModalCreateUser = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={() => handleClose()}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={() => handleSubmit()}>
             Save Changes
           </Button>
         </Modal.Footer>
