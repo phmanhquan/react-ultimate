@@ -4,6 +4,7 @@ import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { FcPlus } from "react-icons/fc";
+import { toast } from "react-toastify";
 
 interface Props {
   show: boolean;
@@ -27,7 +28,19 @@ const ModalCreateUser = ({ show, onHide }: Props) => {
     }
   };
 
+  const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+
   const handleSubmit = async () => {
+    if (!expression.test(email)) {
+      toast.error("Email is not valid");
+      return;
+    }
+
+    if (!password) {
+      toast.error("Invalid password");
+      return;
+    }
+
     const data = new FormData();
     data.append("username", username);
     data.append("password", password);
@@ -40,8 +53,16 @@ const ModalCreateUser = ({ show, onHide }: Props) => {
       data
     );
 
-    console.log(res);
-    handleClose();
+    console.log(res.data);
+
+    if (res.data && res.data.EC === 0) {
+      toast.success(res.data.EM);
+      handleClose();
+    }
+
+    if (res.data && res.data.EC !== 0) {
+      toast.error(res.data.EM);
+    }
   };
 
   const handleClose = () => {
