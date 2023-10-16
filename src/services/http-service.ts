@@ -5,7 +5,7 @@ interface Entity {
 }
 
 interface DataStructure<T> {
-  DT: T[];
+  DT: T;
   EC: number;
   EM: string;
 }
@@ -18,6 +18,16 @@ class HttpService {
   }
 
   getAll<T>() {
+    const controller = new AbortController();
+
+    const response = apiClient.get<DataStructure<T[]>>(this.endpoint, {
+      // signal: controller.signal,
+    });
+
+    return { response, cancel: () => controller.abort() };
+  }
+
+  getDetail<T>() {
     const controller = new AbortController();
 
     const response = apiClient.get<DataStructure<T>>(this.endpoint, {

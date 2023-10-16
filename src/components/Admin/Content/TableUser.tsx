@@ -1,8 +1,10 @@
-import useParticipants from "../../../hooks/useParticipants";
+import { Participant } from "../../../services/participant-service";
 
-const TableUser = () => {
-  const { participants } = useParticipants();
+interface Props {
+  listUser: Participant[];
+}
 
+const TableUser = ({ listUser }: Props) => {
   return (
     <>
       <table className="table table-hover table-bordered">
@@ -15,24 +17,24 @@ const TableUser = () => {
           </tr>
         </thead>
         <tbody>
-          {participants &&
-            participants.length > 0 &&
-            participants.map((user, index) => {
+          {listUser &&
+            listUser.length > 0 &&
+            listUser.map((user, index) => {
               return (
-                <tr>
+                <tr key={user.id}>
                   <th scope="row">{index + 1}</th>
                   <td>{user.username}</td>
                   <td>{user.email}</td>
                   <td>{user.role}</td>
                   <td>
-                    <button className="btn btn-info">Detail</button>
+                    <button className="btn btn-info">View</button>
                     <button className="btn btn-success mx-3">Edit</button>
                     <button className="btn btn-danger">Delete</button>
                   </td>
                 </tr>
               );
             })}
-          {participants && participants.length === 0 && (
+          {listUser && listUser.length === 0 && (
             <tr>
               <td colSpan={4}>Not found data</td>
             </tr>

@@ -9,9 +9,10 @@ import { participantService } from "../../../services/participant-service";
 interface Props {
   show: boolean;
   onHide: () => void;
+  loadTable: () => void;
 }
 
-const ModalCreateUser = ({ show, onHide }: Props) => {
+const ModalCreateUser = ({ show, onHide, loadTable }: Props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -52,8 +53,9 @@ const ModalCreateUser = ({ show, onHide }: Props) => {
     // console.log(res.data);
 
     if (res.data && res.data.EC === 0) {
-      toast.success(res.data.EM);
+      toast.success(res.data.EM, { autoClose: 1000 });
       handleClose();
+      await loadTable();
     }
 
     if (res.data && res.data.EC !== 0) {

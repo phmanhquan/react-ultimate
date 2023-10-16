@@ -11,21 +11,25 @@ const useParticipants = () => {
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
     setLoading(true);
 
     // get -> promise -> res / err
-    const { response, cancel } = participantSubService.getAll<Participant>();
-    console.log(
-      "🚀 ~ file: useParticipant.ts:18 ~ useEffect ~ response:",
-      response
-    );
+    const { response, cancel } =
+      await participantSubService.getAll<Participant>();
+    // console.log(
+    //   "🚀 ~ file: useParticipant.ts:18 ~ useEffect ~ response:",
+    //   response
+    // );
 
     response
       .then((res) => {
         if (!res.data) {
           setError("Not found data.");
           setLoading(false);
-          return;
         } else {
           if (res.data.EC === 0) {
             setParticipants(res.data.DT);
@@ -44,9 +48,9 @@ const useParticipants = () => {
       });
 
     return () => cancel();
-  }, []);
+  };
 
-  return { participants, error, isLoading, setParticipants, setError };
+  return { participants, error, isLoading, setParticipants, setError, getData };
 };
 
 export default useParticipants;

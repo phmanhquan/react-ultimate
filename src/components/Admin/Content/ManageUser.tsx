@@ -3,9 +3,14 @@ import "./ManageUser.scss";
 import { FcPlus } from "react-icons/fc";
 import { useState } from "react";
 import TableUser from "./TableUser";
+import useParticipants from "../../../hooks/useParticipants";
+// import { toast } from "react-toastify";
 
 const ManageUser = () => {
   const [showModal, setShowModal] = useState(false);
+  const { participants, getData } = useParticipants();
+
+  // if (error) toast.error(error);
 
   return (
     <div className="manage-user-container">
@@ -21,11 +26,12 @@ const ManageUser = () => {
           </button>
         </div>
         <div className="table-user-container">
-          <TableUser />
+          <TableUser listUser={participants} />
         </div>
         <ModalCreateUser
           onHide={() => setShowModal(false)}
           show={showModal}
+          loadTable={getData}
         ></ModalCreateUser>
       </div>
     </div>
