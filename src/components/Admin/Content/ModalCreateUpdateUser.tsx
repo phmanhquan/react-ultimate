@@ -6,7 +6,8 @@ import { FcPlus } from "react-icons/fc";
 import { toast } from "react-toastify";
 import {
   Participant,
-  participantService,
+  addParticipant,
+  updateParticipant,
 } from "../../../services/participant-service";
 
 interface Props {
@@ -67,42 +68,23 @@ const ModalCreateUpdateUser = ({
       return;
     }
 
-    const request = new FormData();
-    request.append("username", data.username);
-    request.append("password", data.password);
-    request.append("email", data.email);
-    request.append("role", data.role);
-    request.append("userImage", data.image);
-
-    console.log(type);
+    let res;
 
     if (type === "Add") {
-      const res = await participantService.create(request);
-      // console.log(res.data);
-
-      if (res.data && res.data.EC === 0) {
-        toast.success(res.data.EM, { autoClose: 500 });
-        handleClose();
-        await loadTable();
-      }
-
-      if (res.data && res.data.EC !== 0) {
-        toast.error(res.data.EM);
-      }
+      res = await addParticipant(data);
     } else {
-      request.append("id", data.id.toString());
-      const res = await participantService.update(request);
-      // console.log(res.data);
+      res = await updateParticipant(data);
+    }
 
-      if (res.data && res.data.EC === 0) {
-        toast.success(res.data.EM, { autoClose: 500 });
-        handleClose();
-        await loadTable();
-      }
+    // console.log(res);
+    if (res && res.EC === 0) {
+      toast.success(res.EM, { autoClose: 500 });
+      handleClose();
+      await loadTable();
+    }
 
-      if (res.data && res.data.EC !== 0) {
-        toast.error(res.data.EM);
-      }
+    if (res && res.EC !== 0) {
+      toast.error(res.EM);
     }
   };
 
