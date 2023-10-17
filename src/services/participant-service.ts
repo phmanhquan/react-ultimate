@@ -39,4 +39,15 @@ const updateParticipant = async (data: Participant) => {
   return res.data;
 };
 
-export { addParticipant, updateParticipant, participantSubService };
+const deleteParticipant = async (id: number) => {
+  const res = await participantService.delete(id);
+
+  return res.data;
+};
+
+export {
+  addParticipant,
+  updateParticipant,
+  deleteParticipant,
+  participantSubService,
+};

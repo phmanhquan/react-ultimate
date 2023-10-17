@@ -4,9 +4,10 @@ interface Props {
   listUser: Participant[];
   onUpdate: (id: number) => void;
   onView: (id: number) => void;
+  onDelete: (id: number) => void;
 }
 
-const TableUser = ({ listUser, onUpdate, onView }: Props) => {
+const TableUser = ({ listUser, onUpdate, onView, onDelete }: Props) => {
   return (
     <>
       <table className="table table-hover table-bordered">
@@ -41,7 +42,12 @@ const TableUser = ({ listUser, onUpdate, onView }: Props) => {
                     >
                       Update
                     </button>
-                    <button className="btn btn-danger">Delete</button>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => onDelete(user.id)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               );

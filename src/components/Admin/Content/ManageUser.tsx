@@ -5,10 +5,12 @@ import { useState } from "react";
 import TableUser from "./TableUser";
 import useParticipants from "../../../hooks/useParticipants";
 import { Participant } from "../../../services/participant-service";
+import ModalDeleteUser from "./ModalDeleteUser";
 // import { toast } from "react-toastify";
 
 const ManageUser = () => {
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { participants, getData } = useParticipants();
   const [participant, setParticipant] = useState<Participant>(
     {} as Participant
@@ -46,6 +48,11 @@ const ManageUser = () => {
     setParticipant(participants.find((part) => part.id === id) as Participant);
   };
 
+  const handleDeleteUser = (id: number) => {
+    setShowDeleteModal(true);
+    setParticipant(participants.find((part) => part.id === id) as Participant);
+  };
+
   return (
     <div className="manage-user-container">
       <div className="title">Manage User</div>
@@ -63,6 +70,7 @@ const ManageUser = () => {
           <TableUser
             onView={(id) => handleViewUser(id)}
             onUpdate={(id) => handleUpdateUser(id)}
+            onDelete={(id) => handleDeleteUser(id)}
             listUser={participants}
           />
         </div>
@@ -77,6 +85,12 @@ const ManageUser = () => {
           showPreviewImage={showPreviewImage}
           setShowPreviewImage={setShowPreviewImage}
         ></ModalCreateUpdateUser>
+        <ModalDeleteUser
+          loadTable={getData}
+          data={participant}
+          show={showDeleteModal}
+          onHide={() => setShowDeleteModal(false)}
+        ></ModalDeleteUser>
       </div>
     </div>
   );
