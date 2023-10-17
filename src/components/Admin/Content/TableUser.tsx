@@ -3,9 +3,10 @@ import { Participant } from "../../../services/participant-service";
 interface Props {
   listUser: Participant[];
   onUpdate: (id: number) => void;
+  onView: (id: number) => void;
 }
 
-const TableUser = ({ listUser, onUpdate }: Props) => {
+const TableUser = ({ listUser, onUpdate, onView }: Props) => {
   return (
     <>
       <table className="table table-hover table-bordered">
@@ -28,7 +29,12 @@ const TableUser = ({ listUser, onUpdate }: Props) => {
                   <td>{user.email}</td>
                   <td>{user.role}</td>
                   <td>
-                    <button className="btn btn-info">View</button>
+                    <button
+                      className="btn btn-info"
+                      onClick={() => onView(user.id)}
+                    >
+                      View
+                    </button>
                     <button
                       className="btn btn-success mx-3"
                       onClick={() => onUpdate(user.id)}

@@ -13,7 +13,7 @@ const ManageUser = () => {
   const [participant, setParticipant] = useState<Participant>(
     {} as Participant
   );
-  const [type, setType] = useState<"Add" | "Update">("Add");
+  const [type, setType] = useState<"Add" | "Update" | "View">("Add");
   const [title, setTitle] = useState("");
   const [showPreviewImage, setShowPreviewImage] = useState(false);
 
@@ -38,18 +38,30 @@ const ManageUser = () => {
     setParticipant(participants.find((part) => part.id === id) as Participant);
   };
 
+  const handleViewUser = (id: number) => {
+    setShowPreviewImage(true);
+    setShowModal(true);
+    setType("View");
+    setTitle("User detail");
+    setParticipant(participants.find((part) => part.id === id) as Participant);
+  };
+
   return (
     <div className="manage-user-container">
       <div className="title">Manage User</div>
       <div className="user-content">
         <div className="btn-add-new">
-          <button onClick={() => handleAddUser()} className="btn btn-primary">
+          <button
+            onClick={() => handleAddUser()}
+            className="btn btn-primary my-3"
+          >
             <FcPlus />
             Add new users
           </button>
         </div>
         <div className="table-user-container">
           <TableUser
+            onView={(id) => handleViewUser(id)}
             onUpdate={(id) => handleUpdateUser(id)}
             listUser={participants}
           />

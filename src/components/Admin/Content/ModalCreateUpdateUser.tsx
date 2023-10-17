@@ -12,7 +12,7 @@ import {
 
 interface Props {
   title: string;
-  type: "Add" | "Update";
+  type: "Add" | "Update" | "View";
   data: Participant;
   setData: Dispatch<SetStateAction<Participant>>;
   show: boolean;
@@ -40,8 +40,6 @@ const ModalCreateUpdateUser = ({
       setShowPreviewImage(false);
       setPreviewImage(URL.createObjectURL(event.target.files[0]));
       setData({ ...data, image: event.target.files[0] });
-    } else {
-      //
     }
   };
 
@@ -112,39 +110,41 @@ const ModalCreateUpdateUser = ({
                 type="text"
                 className="form-control"
                 value={data.username}
+                disabled={type === "View"}
                 onChange={(e) => setData({ ...data, username: e.target.value })}
               />
             </div>
-            {type === "Add" && (
-              <>
-                <div className="col-md-6">
-                  <label className="form-label">Password</label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    value={data.password}
-                    onChange={(e) =>
-                      setData({ ...data, password: e.target.value })
-                    }
-                  />
-                </div>
 
-                <div className="col-md-6">
-                  <label className="form-label">Email</label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    value={data.email}
-                    onChange={(e) =>
-                      setData({ ...data, email: e.target.value })
-                    }
-                  />
-                </div>
-              </>
+            {type === "Add" && (
+              <div className="col-md-6">
+                <label className="form-label">Password</label>
+                <input
+                  type="password"
+                  className="form-control"
+                  value={data.password}
+                  onChange={(e) =>
+                    setData({ ...data, password: e.target.value })
+                  }
+                />
+              </div>
             )}
+            {type !== "Update" && (
+              <div className="col-md-6">
+                <label className="form-label">Email</label>
+                <input
+                  type="email"
+                  className="form-control"
+                  value={data.email}
+                  disabled={type === "View"}
+                  onChange={(e) => setData({ ...data, email: e.target.value })}
+                />
+              </div>
+            )}
+
             <div className="col-md-4">
               <label className="form-label">Role</label>
               <select
+                disabled={type === "View"}
                 className="form-select"
                 onChange={(e) =>
                   setData({ ...data, role: e.target.value as "USER" | "ADMIN" })
@@ -154,17 +154,22 @@ const ModalCreateUpdateUser = ({
                 <option value="ADMIN">ADMIN</option>
               </select>
             </div>
-            <div className="col-md-12">
-              <label className="form-label label-upload" htmlFor="labelUpload">
-                <FcPlus /> Upload File Image
-              </label>
-              <input
-                type="file"
-                hidden
-                id="labelUpload"
-                onChange={(event) => handleUpload(event)}
-              />
-            </div>
+            {type !== "View" && (
+              <div className="col-md-12">
+                <label
+                  className="form-label label-upload"
+                  htmlFor="labelUpload"
+                >
+                  <FcPlus /> Upload File Image
+                </label>
+                <input
+                  type="file"
+                  hidden
+                  id="labelUpload"
+                  onChange={(event) => handleUpload(event)}
+                />
+              </div>
+            )}
             <div className="col-md-12 img-preview">
               {previewImage ? (
                 <img src={previewImage} alt="" />
@@ -178,7 +183,11 @@ const ModalCreateUpdateUser = ({
           <Button variant="secondary" onClick={() => handleClose()}>
             Close
           </Button>
-          <Button variant="primary" onClick={() => handleSubmit()}>
+          <Button
+            disabled={type === "View"}
+            variant="primary"
+            onClick={() => handleSubmit()}
+          >
             Save Changes
           </Button>
         </Modal.Footer>
