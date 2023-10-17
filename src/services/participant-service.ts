@@ -5,8 +5,8 @@ export interface Participant {
   username: string;
   password: string;
   email: string;
-  role: string;
-  image: string;
+  role: "USER" | "ADMIN";
+  image: string | File;
 }
 
 const participantService = create("/api/v1/participant");

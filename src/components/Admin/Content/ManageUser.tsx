@@ -1,38 +1,70 @@
-import ModalCreateUser from "./ModalCreateUser";
+import ModalCreateUpdateUser from "./ModalCreateUpdateUser";
 import "./ManageUser.scss";
 import { FcPlus } from "react-icons/fc";
 import { useState } from "react";
 import TableUser from "./TableUser";
 import useParticipants from "../../../hooks/useParticipants";
+import { Participant } from "../../../services/participant-service";
 // import { toast } from "react-toastify";
 
 const ManageUser = () => {
   const [showModal, setShowModal] = useState(false);
   const { participants, getData } = useParticipants();
+  const [participant, setParticipant] = useState<Participant>(
+    {} as Participant
+  );
+  const [type, setType] = useState<"Add" | "Update">("Add");
+  const [title, setTitle] = useState("");
+  const [showPreviewImage, setShowPreviewImage] = useState(false);
 
-  // if (error) toast.error(error);
+  const handleAddUser = () => {
+    setType("Add");
+    setTitle("Add new user");
+    setShowModal(true);
+    setParticipant({
+      username: "",
+      password: "",
+      email: "",
+      role: "USER",
+    } as Participant);
+    setShowPreviewImage(false);
+  };
+
+  const handleUpdateUser = (id: number) => {
+    setShowPreviewImage(true);
+    setShowModal(true);
+    setType("Update");
+    setTitle("Update user");
+    setParticipant(participants.find((part) => part.id === id) as Participant);
+  };
 
   return (
     <div className="manage-user-container">
       <div className="title">Manage User</div>
       <div className="user-content">
         <div className="btn-add-new">
-          <button
-            onClick={() => setShowModal(true)}
-            className="btn btn-primary"
-          >
+          <button onClick={() => handleAddUser()} className="btn btn-primary">
             <FcPlus />
             Add new users
           </button>
         </div>
         <div className="table-user-container">
-          <TableUser listUser={participants} />
+          <TableUser
+            onUpdate={(id) => handleUpdateUser(id)}
+            listUser={participants}
+          />
         </div>
-        <ModalCreateUser
+        <ModalCreateUpdateUser
+          title={title}
+          type={type}
+          data={participant}
           onHide={() => setShowModal(false)}
           show={showModal}
           loadTable={getData}
-        ></ModalCreateUser>
+          setData={setParticipant}
+          showPreviewImage={showPreviewImage}
+          setShowPreviewImage={setShowPreviewImage}
+        ></ModalCreateUpdateUser>
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
 import apiClient from "./api-client";
 
-interface Entity {
-  id: number;
-}
+// interface Entity {
+//   id: number;
+// }
 
 interface DataStructure<T> {
   DT: T;
@@ -45,8 +45,8 @@ class HttpService {
     return apiClient.post(this.endpoint, entity);
   }
 
-  update<T extends Entity>(entity: T) {
-    return apiClient.patch(this.endpoint + "/" + entity.id, entity);
+  update<T>(entity: T) {
+    return apiClient.put(this.endpoint, entity);
   }
 }
 
