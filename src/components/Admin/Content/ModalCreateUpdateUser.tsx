@@ -18,6 +18,7 @@ interface Props {
   show: boolean;
   onHide: () => void;
   loadTable: () => void;
+  setPageView: Dispatch<SetStateAction<number>>;
   showPreviewImage: boolean;
   setShowPreviewImage: Dispatch<SetStateAction<boolean>>;
 }
@@ -28,6 +29,7 @@ const ModalCreateUpdateUser = ({
   setShowPreviewImage,
   onHide,
   loadTable,
+  setPageView,
   type,
   title,
   data,
@@ -78,6 +80,8 @@ const ModalCreateUpdateUser = ({
     if (res && res.EC === 0) {
       toast.success(res.EM, { autoClose: 500 });
       handleClose();
+      if (type === "Add") setPageView(1);
+
       await loadTable();
     }
 

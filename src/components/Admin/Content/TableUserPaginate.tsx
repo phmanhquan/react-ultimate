@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { Participant } from "../../../services/participant-service";
 import ReactPaginate from "react-paginate";
 
 interface Props {
   listUser: Participant[];
   totalPage: number;
+  pageSelected: number;
   limit: number;
   onUpdate: (id: number) => void;
   onView: (id: number) => void;
@@ -15,19 +15,13 @@ interface Props {
 const TableUserPaginate = ({
   listUser,
   totalPage,
+  pageSelected,
   limit,
   onUpdate,
   onView,
   onDelete,
   onChangePage,
 }: Props) => {
-  const [pageSelected, setPageSelected] = useState(0);
-
-  const handleChangePage = (event: { selected: number }) => {
-    setPageSelected(event.selected);
-    return onChangePage(event.selected);
-  };
-
   return (
     <>
       <table className="table table-hover table-bordered">
@@ -82,7 +76,7 @@ const TableUserPaginate = ({
       <div className="user-pagination d-flex justify-content-center">
         <ReactPaginate
           nextLabel="Next >"
-          onPageChange={(event) => handleChangePage(event)}
+          onPageChange={(event) => onChangePage(event.selected)}
           pageRangeDisplayed={3}
           marginPagesDisplayed={2}
           pageCount={totalPage}
@@ -99,6 +93,7 @@ const TableUserPaginate = ({
           containerClassName="pagination"
           activeClassName="active"
           renderOnZeroPageCount={null}
+          forcePage={pageSelected}
         />
       </div>
     </>

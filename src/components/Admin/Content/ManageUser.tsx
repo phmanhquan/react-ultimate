@@ -10,7 +10,7 @@ import TableUserPaginate from "./TableUserPaginate";
 // import { toast } from "react-toastify";
 
 const ManageUser = () => {
-  const LIMIT_USER = 5;
+  const LIMIT_USER = 3;
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [pageView, setPageView] = useState(1);
@@ -79,6 +79,7 @@ const ManageUser = () => {
         <div className="table-user-container">
           <TableUserPaginate
             limit={LIMIT_USER}
+            pageSelected={pageView - 1}
             totalPage={totalPage}
             onView={(id) => handleViewUser(id)}
             onUpdate={(id) => handleUpdateUser(id)}
@@ -88,6 +89,7 @@ const ManageUser = () => {
           />
         </div>
         <ModalCreateUpdateUser
+          setPageView={setPageView}
           title={title}
           type={type}
           data={participant}
@@ -99,6 +101,7 @@ const ManageUser = () => {
           setShowPreviewImage={setShowPreviewImage}
         ></ModalCreateUpdateUser>
         <ModalDeleteUser
+          setPageView={setPageView}
           loadTable={getData}
           data={participant}
           show={showDeleteModal}

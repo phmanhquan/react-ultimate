@@ -5,21 +5,30 @@ import {
   deleteParticipant,
 } from "../../../services/participant-service";
 import { toast } from "react-toastify";
+import { Dispatch, SetStateAction } from "react";
 
 interface Props {
   data: Participant;
   show: boolean;
+  setPageView: Dispatch<SetStateAction<number>>;
   onHide: () => void;
   loadTable: () => void;
 }
 
-const ModalDeleteUser = ({ onHide, loadTable, show, data }: Props) => {
+const ModalDeleteUser = ({
+  setPageView,
+  onHide,
+  loadTable,
+  show,
+  data,
+}: Props) => {
   const handleClose = () => onHide();
   const handleSubmit = async () => {
     const res = await deleteParticipant(data.id);
     if (res && res.EC === 0) {
       toast.success(res.EM, { autoClose: 500 });
       handleClose();
+      setPageView(1);
       await loadTable();
     }
 
