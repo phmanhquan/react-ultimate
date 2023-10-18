@@ -49,5 +49,6 @@ export {
   addParticipant,
   updateParticipant,
   deleteParticipant,
+  participantService,
   participantSubService,
 };

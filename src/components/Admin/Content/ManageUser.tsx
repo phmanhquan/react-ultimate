@@ -2,16 +2,22 @@ import ModalCreateUpdateUser from "./ModalCreateUpdateUser";
 import "./ManageUser.scss";
 import { FcPlus } from "react-icons/fc";
 import { useState } from "react";
-import TableUser from "./TableUser";
-import useParticipants from "../../../hooks/useParticipants";
+// import TableUser from "./TableUser";
+import { useParticipantsPaginate } from "../../../hooks/useParticipants";
 import { Participant } from "../../../services/participant-service";
 import ModalDeleteUser from "./ModalDeleteUser";
+import TableUserPaginate from "./TableUserPaginate";
 // import { toast } from "react-toastify";
 
 const ManageUser = () => {
+  const LIMIT_USER = 5;
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const { participants, getData } = useParticipants();
+  const [pageView, setPageView] = useState(1);
+  const { participants, getData, totalPage } = useParticipantsPaginate({
+    page: pageView,
+    limit: LIMIT_USER,
+  });
   const [participant, setParticipant] = useState<Participant>(
     {} as Participant
   );
@@ -53,6 +59,10 @@ const ManageUser = () => {
     setParticipant(participants.find((part) => part.id === id) as Participant);
   };
 
+  const handleChangePage = (page: number) => {
+    setPageView(page + 1);
+  };
+
   return (
     <div className="manage-user-container">
       <div className="title">Manage User</div>
@@ -67,10 +77,13 @@ const ManageUser = () => {
           </button>
         </div>
         <div className="table-user-container">
-          <TableUser
+          <TableUserPaginate
+            limit={LIMIT_USER}
+            totalPage={totalPage}
             onView={(id) => handleViewUser(id)}
             onUpdate={(id) => handleUpdateUser(id)}
             onDelete={(id) => handleDeleteUser(id)}
+            onChangePage={(page) => handleChangePage(page)}
             listUser={participants}
           />
         </div>

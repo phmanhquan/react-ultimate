@@ -10,6 +10,18 @@ interface DataStructure<T> {
   EM: string;
 }
 
+interface Paginate<T> {
+  totalPages: number;
+  totalRows: number;
+  users: T;
+}
+
+interface DataStructurePaginate<T> {
+  DT: Paginate<T>;
+  EC: number;
+  EM: string;
+}
+
 class HttpService {
   endpoint: string;
 
@@ -21,8 +33,18 @@ class HttpService {
     const controller = new AbortController();
 
     const response = apiClient.get<DataStructure<T[]>>(this.endpoint, {
-      // signal: controller.signal,
+      signal: controller.signal,
     });
+
+    return { response, cancel: () => controller.abort() };
+  }
+
+  getAllPaginate<T>(page: number, limit: number) {
+    const controller = new AbortController();
+
+    const response = apiClient.get<DataStructurePaginate<T[]>>(
+      this.endpoint + `?page=${page}&limit=${limit}`
+    );
 
     return { response, cancel: () => controller.abort() };
   }

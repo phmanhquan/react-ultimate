@@ -16,7 +16,11 @@
         }
 
         .admin-main{
-            // border: 1px solid red
+            .user-pagination{
+                //if not use bootstrap
+                // display:flex;
+                // justify-content: center;
+            }
         }
     }
 }
