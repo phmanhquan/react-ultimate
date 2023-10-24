@@ -2,7 +2,23 @@
     .header{
         height: 45px;
         text-align: right;
-        border: 1px solid red;
+        // display: flex;
+        // align-items: center;
+        // justify-content: flex-end;
+        padding: 5px 100px 0 100px;
+
+        button {
+            padding: 3px 15px;
+            margin-left: 15px;
+            border-radius: 5px;
+            background: #a59e9e;
+            border: 1px solid;
+
+            &:hover{
+                background-color: rgb(241, 186, 186);
+            }
+        }
+
     }
 
     .title{
@@ -37,7 +53,10 @@
             background: black;
         }
 
-
+        .back{
+            cursor: pointer;
+            text-decoration: underline;
+        }
 
     }
 }
