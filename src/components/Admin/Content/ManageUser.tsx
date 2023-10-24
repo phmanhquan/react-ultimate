@@ -102,7 +102,7 @@ const ManageUser = () => {
         ></ModalCreateUpdateUser>
         <ModalDeleteUser
           setPageView={setPageView}
-          loadTable={getData}
+          // loadTable={getData}
           data={participant}
           show={showDeleteModal}
           onHide={() => setShowDeleteModal(false)}

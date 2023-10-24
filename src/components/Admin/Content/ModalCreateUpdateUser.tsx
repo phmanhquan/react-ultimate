@@ -80,9 +80,7 @@ const ModalCreateUpdateUser = ({
     if (res && res.EC === 0) {
       toast.success(res.EM, { autoClose: 500 });
       handleClose();
-      if (type === "Add") setPageView(1);
-
-      await loadTable();
+      type === "Add" ? setPageView(1) : await loadTable();
     }
 
     if (res && res.EC !== 0) {
