@@ -99,13 +99,15 @@ const ManageUser = () => {
           setData={setParticipant}
           showPreviewImage={showPreviewImage}
           setShowPreviewImage={setShowPreviewImage}
+          currentPage={pageView}
         ></ModalCreateUpdateUser>
         <ModalDeleteUser
           setPageView={setPageView}
-          // loadTable={getData}
+          loadTable={getData}
           data={participant}
           show={showDeleteModal}
           onHide={() => setShowDeleteModal(false)}
+          currentPage={pageView}
         ></ModalDeleteUser>
       </div>
     </div>

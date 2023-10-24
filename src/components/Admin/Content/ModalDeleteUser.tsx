@@ -11,14 +11,16 @@ interface Props {
   data: Participant;
   show: boolean;
   setPageView: Dispatch<SetStateAction<number>>;
+  currentPage: number;
   onHide: () => void;
-  // loadTable: () => void;
+  loadTable: () => void;
 }
 
 const ModalDeleteUser = ({
   setPageView,
+  currentPage,
   onHide,
-  // loadTable,
+  loadTable,
   show,
   data,
 }: Props) => {
@@ -28,8 +30,7 @@ const ModalDeleteUser = ({
     if (res && res.EC === 0) {
       toast.success(res.EM, { autoClose: 500 });
       handleClose();
-      setPageView(1);
-      // await loadTable();
+      currentPage !== 1 ? setPageView(1) : await loadTable();
     }
 
     if (res && res.EC !== 0) {
