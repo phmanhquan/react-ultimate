@@ -1,12 +1,13 @@
 import create from "./http-service";
 
 export interface Account {
+  username: string;
   email: string;
   password: string;
 }
 
 const loginService = create("/api/v1/login");
-// const participantSubService = create("/api/v1/participant/all");
+const registerService = create("/api/v1/register");
 
 const login = async (data: Account) => {
   const request = new FormData();
@@ -19,18 +20,17 @@ const login = async (data: Account) => {
   return res.data;
 };
 
-// const updateParticipant = async (data: Participant) => {
-//   const request = new FormData();
+const register = async (data: Account) => {
+  const request = new FormData();
 
-//   request.append("id", data.id.toString());
-//   request.append("username", data.username);
-//   request.append("role", data.role);
-//   request.append("userImage", data.image);
+  request.append("username", data.username);
+  request.append("email", data.email);
+  request.append("password", data.password);
 
-//   const res = await participantService.update(request);
+  const res = await registerService.create(request);
 
-//   return res.data;
-// };
+  return res.data;
+};
 
 // const deleteParticipant = async (id: number) => {
 //   const res = await participantService.delete(id);
@@ -40,7 +40,7 @@ const login = async (data: Account) => {
 
 export {
   login,
-  //   updateParticipant,
+  register,
   //   deleteParticipant,
   //   participantService,
   //   participantSubService,

@@ -1,29 +1,36 @@
 import { useState } from "react";
-import "./Login.scss";
+import "./Register.scss";
 import { useNavigate } from "react-router-dom";
-import { Account, login } from "../../services/auth-service";
+import { Account, register } from "../../services/auth-service";
 import { toast } from "react-toastify";
+import { VscEye, VscEyeClosed } from "react-icons/vsc";
 
-const Login = () => {
+const Register = () => {
   const [account, setAccount] = useState<Account>({
     username: "",
     email: "",
     password: "",
   });
+  const [isShowPassword, setIsShowPassword] = useState(false);
   const navigate = useNavigate();
   const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     //validate
     if (!expression.test(account.email)) {
       toast.error("Email is not valid");
       return;
     }
 
+    if (!account.password) {
+      toast.error("Invalid password");
+      return;
+    }
+
     //submit apis
-    const res = await login(account);
+    const res = await register(account);
     if (res && res.EC === 0) {
-      navigate("/");
+      navigate("/login");
     }
 
     if (res && res.EC !== 0) {
@@ -32,22 +39,22 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className="register-container">
       <div className="header">
-        <span> Don't have an account yet?</span>
+        <span> Already have an account?</span>
         <button
           onClick={() => {
-            navigate("/register");
+            navigate("/login");
           }}
         >
-          Sign Up
+          Log in
         </button>
       </div>
       <div className="title col-4 mx-auto">React Ultimate</div>
-      <div className="welcome col-4 mx-auto">Hello, who's this?</div>
+      <div className="welcome col-4 mx-auto">Start your journey?</div>
       <div className="content-form col-4 mx-auto">
         <div className="form-group">
-          <label>Email</label>
+          <label>Email (*)</label>
           <input
             type="email"
             className="form-control"
@@ -57,21 +64,37 @@ const Login = () => {
             }
           />
         </div>
-        <div className="form-group">
-          <label>Password</label>
+        <div className="pass-group">
+          <label>Password (*)</label>
           <input
-            type="password"
+            type={isShowPassword ? "text" : "password"}
             className="form-control"
             value={account.password}
             onChange={(event) =>
               setAccount({ ...account, password: event.target.value })
             }
           />
+          <span
+            className="show-password"
+            onClick={() => setIsShowPassword(!isShowPassword)}
+          >
+            {!isShowPassword ? <VscEyeClosed /> : <VscEye />}
+          </span>
         </div>
-        <span className="forgot-password">Forgot password ?</span>
+        <div className="form-group">
+          <label>Username</label>
+          <input
+            type="text"
+            className="form-control"
+            value={account.username}
+            onChange={(event) =>
+              setAccount({ ...account, username: event.target.value })
+            }
+          />
+        </div>
         <div>
-          <button className="btn-submit" onClick={() => handleLogin()}>
-            Login to React Ultimate
+          <button className="btn-submit" onClick={() => handleRegister()}>
+            Create my free account
           </button>
         </div>
         <div className="text-center">
@@ -89,4 +112,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
