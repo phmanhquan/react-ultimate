@@ -4,6 +4,7 @@ export interface Account {
   username: string;
   email: string;
   password: string;
+  delay: number;
 }
 
 const loginService = create("/api/v1/login");
@@ -14,6 +15,7 @@ const login = async (data: Account) => {
 
   request.append("email", data.email);
   request.append("password", data.password);
+  if (data.delay) request.append("delay", data.delay.toString());
 
   const res = await loginService.create(request);
 

@@ -3,13 +3,16 @@ import "./Login.scss";
 import { useNavigate } from "react-router-dom";
 import { Account, login } from "../../services/auth-service";
 import { toast } from "react-toastify";
+import { ImSpinner9 } from "react-icons/im";
 
 const Login = () => {
   const [account, setAccount] = useState<Account>({
     username: "",
     email: "",
     password: "",
-  });
+    delay: 2000,
+  } as Account);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
@@ -20,13 +23,22 @@ const Login = () => {
       return;
     }
 
+    if (!account.password) {
+      toast.error("Invalid password");
+      return;
+    }
+
+    setIsLoading(true);
     //submit apis
     const res = await login(account);
     if (res && res.EC === 0) {
+      toast.success(res.EM);
+      setIsLoading(false);
       navigate("/");
     }
 
     if (res && res.EC !== 0) {
+      setIsLoading(false);
       toast.error(res.EM);
     }
   };
@@ -70,8 +82,13 @@ const Login = () => {
         </div>
         <span className="forgot-password">Forgot password ?</span>
         <div>
-          <button className="btn-submit" onClick={() => handleLogin()}>
-            Login to React Ultimate
+          <button
+            className="btn-submit"
+            onClick={() => handleLogin()}
+            disabled={isLoading}
+          >
+            {isLoading && <ImSpinner9 className="loaderIcon" />}
+            <span>Login to React Ultimate</span>
           </button>
         </div>
         <div className="text-center">

@@ -5,6 +5,7 @@ import store from "./redux/store.ts";
 import { Provider } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Layout from "./Layout.tsx";
+import "nprogress/nprogress.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
