@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Account, login } from "../../services/auth-service";
 import { toast } from "react-toastify";
 import { ImSpinner9 } from "react-icons/im";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const [account, setAccount] = useState<Account>({
@@ -14,6 +15,7 @@ const Login = () => {
   } as Account);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
   const handleLogin = async () => {
@@ -32,6 +34,7 @@ const Login = () => {
     //submit apis
     const res = await login(account);
     if (res && res.EC === 0) {
+      dispatch({ type: "LOGIN_SUCCESS", payload: res });
       toast.success(res.EM);
       setIsLoading(false);
       navigate("/");
