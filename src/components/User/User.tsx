@@ -1,7 +1,7 @@
-import React from "react";
+import ListQuiz from "./ListQuiz";
 
 const User = () => {
-  return <div>User</div>;
+  return <ListQuiz></ListQuiz>;
 };
 
 export default User;
