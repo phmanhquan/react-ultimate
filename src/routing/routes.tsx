@@ -7,6 +7,8 @@ import DashBoard from "../components/Admin/Content/DashBoard";
 import ManageUser from "../components/Admin/Content/ManageUser";
 import Login from "../components/Auth/Login";
 import Register from "../components/Auth/Register";
+import DetailQuiz from "../components/User/DetailQuiz";
+import NotFound from "../components/NotFound";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +30,8 @@ const router = createBrowserRouter([
   },
   { path: "login", element: <Login></Login> },
   { path: "register", element: <Register></Register> },
+  { path: "quiz/:id", element: <DetailQuiz></DetailQuiz> },
+  { path: "*", element: <NotFound></NotFound> },
 ]);
 
 export default router;

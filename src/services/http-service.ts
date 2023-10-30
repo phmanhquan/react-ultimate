@@ -49,12 +49,15 @@ class HttpService {
     return { response, cancel: () => controller.abort() };
   }
 
-  getDetail<T>() {
+  getById<T>(id: string) {
     const controller = new AbortController();
 
-    const response = apiClient.get<DataStructure<T>>(this.endpoint, {
-      signal: controller.signal,
-    });
+    const response = apiClient.get<DataStructure<T[]>>(
+      this.endpoint + `?quizId=${id}`,
+      {
+        signal: controller.signal,
+      }
+    );
 
     return { response, cancel: () => controller.abort() };
   }
