@@ -3,14 +3,37 @@ import { DataQuestion, useQuestions } from "../../hooks/useQuestions";
 import "./DetailQuiz.scss";
 import Question from "./Question";
 import { useState } from "react";
+import _ from "lodash";
 
 const DetailQuiz = () => {
   const params = useParams();
   const location = useLocation();
   const quizId = params && params.id ? params.id.toString() : "";
-  const { questions } = useQuestions(quizId);
+  const { questions, setQuestions } = useQuestions(quizId);
   const [index, setIndex] = useState(0);
-  console.log(questions);
+
+  const handleCheckbox = (answerId: string, questionId: string) => {
+    const dataQuizClone = _.cloneDeep(questions);
+    const question = dataQuizClone.find(
+      (q) => +q.questionId === +questionId
+    ) as DataQuestion;
+    if (question && question.answers) {
+      const b = question.answers.map((item) => {
+        if (item.id === +answerId) {
+          item.isSelected = !item.isSelected;
+        }
+        return item;
+      });
+      question.answers = b;
+    }
+    const index = dataQuizClone.findIndex(
+      (item) => +item.questionId === +questionId
+    );
+    if (index > -1) {
+      dataQuizClone[index] = question;
+      setQuestions(dataQuizClone);
+    }
+  };
 
   return (
     <div className="detail-quiz-container">
@@ -21,6 +44,7 @@ const DetailQuiz = () => {
 
         <div className="q-content">
           <Question
+            handleId={handleCheckbox}
             index={index}
             data={
               questions && questions.length > 0
@@ -46,6 +70,12 @@ const DetailQuiz = () => {
               Next
             </button>
           )}
+          <button
+            className="btn btn-warning"
+            onClick={() => setIndex(index + 1)}
+          >
+            Finish
+          </button>
         </div>
       </div>
       <div className="right-content">right</div>

@@ -4,19 +4,31 @@ import { DataQuestion } from "../../hooks/useQuestions";
 interface Props {
   data: DataQuestion;
   index: number;
+  handleId: (answerId: string, questionId: string) => void;
 }
 
-const Question = ({ data, index }: Props) => {
+const Question = ({ data, index, handleId }: Props) => {
   if (_.isEmpty(data)) {
     return <></>;
   }
 
+  const handleCheckbox = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    answerId: string,
+    questionId: string
+  ) => {
+    // console.log(event.target.checked, answerId, questionId);
+    handleId(answerId, questionId);
+  };
+
   return (
     <>
-      {data?.image && (
+      {data.image ? (
         <div className="q-image">
           <img src={`data:image/jpeg;base64,${data.image}`} />
         </div>
+      ) : (
+        <div className="q-image"></div>
       )}
       <div className="question">
         Question {index + 1}: {data.description} ?
@@ -30,7 +42,10 @@ const Question = ({ data, index }: Props) => {
                 <input
                   className="form-check-input"
                   type="checkbox"
-                  value=""
+                  checked={item.isSelected}
+                  onChange={(event) =>
+                    handleCheckbox(event, item.id.toString(), data.questionId)
+                  }
                   //   id="flexCheckDefault"
                 />
                 <label className="form-check-label">

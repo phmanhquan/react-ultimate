@@ -3,6 +3,7 @@ import create from "./http-service";
 export interface Answers {
   id: number;
   description: string;
+  isSelected: boolean;
 }
 
 export interface Question {

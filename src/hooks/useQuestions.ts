@@ -47,7 +47,7 @@ const useQuestions = (quizId: string) => {
                     description = item.description;
                     image = item.image;
                   }
-
+                  item.answers.isSelected = false;
                   answers.push(item.answers);
                 });
                 const dataQuestion = {
