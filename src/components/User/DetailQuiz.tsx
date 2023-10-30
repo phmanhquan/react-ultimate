@@ -4,6 +4,12 @@ import "./DetailQuiz.scss";
 import Question from "./Question";
 import { useState } from "react";
 import _ from "lodash";
+import {
+  QuizSubmitResponse,
+  SubmitAnswer,
+  postSubmitQuiz,
+} from "../../services/quiz-service";
+import ModalResult from "./ModalResult";
 
 const DetailQuiz = () => {
   const params = useParams();
@@ -11,6 +17,10 @@ const DetailQuiz = () => {
   const quizId = params && params.id ? params.id.toString() : "";
   const { questions, setQuestions } = useQuestions(quizId);
   const [index, setIndex] = useState(0);
+  const [isShowModalResult, setIsShowModalResult] = useState(false);
+  const [dataModalResult, setDataModalResult] = useState<QuizSubmitResponse>(
+    {} as QuizSubmitResponse
+  );
 
   const handleCheckbox = (answerId: string, questionId: string) => {
     const dataQuizClone = _.cloneDeep(questions);
@@ -32,6 +42,36 @@ const DetailQuiz = () => {
     if (index > -1) {
       dataQuizClone[index] = question;
       setQuestions(dataQuizClone);
+    }
+  };
+
+  const handleFinish = async () => {
+    const payload = {
+      quizId: +quizId,
+      answers: [],
+    } as SubmitAnswer;
+
+    if (questions && questions.length > 0) {
+      questions.forEach((item) => {
+        const userAnswerId = [] as number[];
+        item.answers.forEach((answer) => {
+          if (answer.isSelected) userAnswerId.push(answer.id);
+        });
+
+        payload.answers.push({
+          questionId: +item.questionId,
+          userAnswerId: userAnswerId,
+        });
+      });
+    }
+
+    //submit api
+    const res = await postSubmitQuiz(payload);
+    if (res && res.EC === 0) {
+      setDataModalResult(res.DT as QuizSubmitResponse);
+      setIsShowModalResult(true);
+    } else {
+      alert("dsadasd");
     }
   };
 
@@ -70,15 +110,17 @@ const DetailQuiz = () => {
               Next
             </button>
           )}
-          <button
-            className="btn btn-warning"
-            onClick={() => setIndex(index + 1)}
-          >
+          <button className="btn btn-warning" onClick={() => handleFinish()}>
             Finish
           </button>
         </div>
       </div>
       <div className="right-content">right</div>
+      <ModalResult
+        show={isShowModalResult}
+        setShowModal={setIsShowModalResult}
+        data={dataModalResult}
+      />
     </div>
   );
 };

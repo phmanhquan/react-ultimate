@@ -15,21 +15,43 @@ export interface Quiz {
   ParticipantQuiz: ParticipantQuiz;
 }
 
+export interface AnswerQuestion {
+  questionId: number;
+  userAnswerId: number[];
+}
+
+export interface SubmitAnswer {
+  quizId: number;
+  answers: AnswerQuestion[];
+}
+
+interface SystemAnswer {
+  id: number;
+  description: string;
+  correct_answer: boolean;
+}
+
+interface QuizDataResponse {
+  questionId: number;
+  isCorrect: boolean;
+  userAnswers: number[];
+  systemAnswers: SystemAnswer[];
+}
+
+export interface QuizSubmitResponse {
+  quizData: QuizDataResponse;
+  countCorrect: number;
+  countTotal: number;
+}
+
 const quizByPartService = create("/api/v1/quiz-by-participant");
-// const participantSubService = create("/api/v1/participant/all");
+const quizSubmit = create("/api/v1/quiz-submit");
 
-// const updateParticipant = async (data: Participant) => {
-//   const request = new FormData();
+const postSubmitQuiz = async (data: SubmitAnswer) => {
+  const res = await quizSubmit.create({ ...data });
 
-//   request.append("id", data.id.toString());
-//   request.append("username", data.username);
-//   request.append("role", data.role);
-//   request.append("userImage", data.image);
-
-//   const res = await participantService.update(request);
-
-//   return res.data;
-// };
+  return res.data;
+};
 
 // const deleteParticipant = async (id: number) => {
 //   const res = await participantService.delete(id);
@@ -37,4 +59,4 @@ const quizByPartService = create("/api/v1/quiz-by-participant");
 //   return res.data;
 // };
 
-export { quizByPartService };
+export { quizByPartService, postSubmitQuiz };
