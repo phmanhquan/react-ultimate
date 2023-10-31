@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import "./ManageQuiz.scss";
 import Select, { SingleValue } from "react-select";
 import {
   NewQuiz,
@@ -12,15 +11,11 @@ import TableQuiz from "./TableQuiz";
 import Accordion from "react-bootstrap/Accordion";
 import ModalDeleteQuiz from "./ModalDeleteQuiz";
 import { useAllQuizzes } from "../../../../hooks/useQuizzes";
-// import { useAccordionButton } from "react-bootstrap/AccordionButton";
+import { useAccordionButton } from "react-bootstrap/AccordionButton";
+import { Card } from "react-bootstrap";
+import { options } from "./ManageQuiz";
 
-const options = [
-  { value: "EASY", label: "EASY" },
-  { value: "MEDIUM", label: "MEDIUM" },
-  { value: "HARD", label: "HARD" },
-];
-
-const ManageQuiz = () => {
+export const ManageQuiz = () => {
   const [quiz, setQuiz] = useState<NewQuiz>({
     name: "",
     difficulty: { value: "EASY", label: "EASY" },
@@ -79,9 +74,31 @@ const ManageQuiz = () => {
     setQuizDetail(quizzes.find((quiz) => quiz.id === id) as QuizAll);
   };
 
+  const [active, setActive] = useState("");
+
+  const handleTest = useAccordionButton("0", () => setActive("0"));
+
   return (
     <div className="quiz-container">
       <Accordion defaultActiveKey="0">
+        <Card>
+          <Card.Header>
+            <CustomToggle eventKey="0">Click me!</CustomToggle>
+          </Card.Header>
+          <Accordion.Collapse eventKey="0">
+            <Card.Body>Hello! I'm the body</Card.Body>
+          </Accordion.Collapse>
+        </Card>
+        <Card>
+          <Card.Header>
+            <CustomToggle eventKey="1">Click me!</CustomToggle>
+          </Card.Header>
+          <Accordion.Collapse eventKey="1">
+            <Card.Body>Hello! I'm another body</Card.Body>
+          </Accordion.Collapse>
+        </Card>
+      </Accordion>
+      <Accordion defaultActiveKey={active}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>Manage Quiz</Accordion.Header>
           <Accordion.Body>
@@ -145,6 +162,9 @@ const ManageQuiz = () => {
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
+      <button onClick={handleTest} className="btn btn-primary">
+        stestse
+      </button>
       <div className="list-detail">
         <TableQuiz
           quizzes={quizzes}
@@ -160,5 +180,3 @@ const ManageQuiz = () => {
     </div>
   );
 };
-
-export default ManageQuiz;

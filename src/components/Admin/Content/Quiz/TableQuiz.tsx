@@ -1,20 +1,13 @@
-import { toast } from "react-toastify";
-import { useAllQuizzes } from "../../../../hooks/useQuizzes";
-import { deleteQuiz } from "../../../../services/quiz-service";
+import { QuizAll } from "../../../../services/quiz-service";
 
-const TableQuiz = () => {
-  const { quizzes, getData } = useAllQuizzes();
+interface Props {
+  quizzes: QuizAll[];
+  // onUpdate: (id: number) => void;
+  // onView: (id: number) => void;
+  onDelete: (id: number) => void;
+}
 
-  const handleDelete = async (id: number) => {
-    const res = await deleteQuiz(id);
-    if (res && res.EC === 0) {
-      toast.success(res.EM, { autoClose: 500 });
-      await getData();
-    } else {
-      toast.error(res.EM);
-    }
-  };
-
+const TableQuiz = ({ quizzes, onDelete }: Props) => {
   return (
     <>
       <div>List Quizzes:</div>
@@ -41,7 +34,7 @@ const TableQuiz = () => {
                   <td style={{ display: "flex", gap: "15px" }}>
                     <button className="btn btn-warning">Edit</button>
                     <button
-                      onClick={() => handleDelete(quiz.id)}
+                      onClick={() => onDelete(quiz.id)}
                       className="btn btn-danger"
                     >
                       Delete
