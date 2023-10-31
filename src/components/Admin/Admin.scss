@@ -16,11 +16,14 @@
         }
 
         //if not use bootstrap
-        // .admin-main{
+        .admin-main{
+            height: calc(100vh - 50px);
+            margin-bottom: 10px;
+            
             // .user-pagination{            
-                // display:flex;
-                // justify-content: center;
+            //     display:flex;
+            //     justify-content: center;
             // }
-        // }
+        }
     }
 }
