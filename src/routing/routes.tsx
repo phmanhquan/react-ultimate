@@ -9,6 +9,7 @@ import Login from "../components/Auth/Login";
 import Register from "../components/Auth/Register";
 import DetailQuiz from "../components/User/DetailQuiz";
 import NotFound from "../components/NotFound";
+import ManageQuiz from "../components/Admin/Content/Quiz/ManageQuiz";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <DashBoard></DashBoard> },
       { path: "manage-users", element: <ManageUser></ManageUser> },
+      { path: "manage-quizzes", element: <ManageQuiz></ManageQuiz> },
     ],
   },
   { path: "login", element: <Login></Login> },

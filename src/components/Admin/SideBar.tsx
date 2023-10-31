@@ -67,7 +67,10 @@ const SideBar = ({ collapsed, toggled, handleToggleSidebar }: Props) => {
               <MenuItem>
                 Quản lý Users <Link to="/admins/manage-users" />
               </MenuItem>
-              <MenuItem> Quản lý Bài Quiz</MenuItem>
+              <MenuItem>
+                Quản lý Bài Quiz
+                <Link to="/admins/manage-quizzes" />
+              </MenuItem>
               <MenuItem> Quản lý Câu Hỏi</MenuItem>
             </SubMenu>
           </Menu>

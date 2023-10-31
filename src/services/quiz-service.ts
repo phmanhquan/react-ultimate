@@ -44,11 +44,52 @@ export interface QuizSubmitResponse {
   countTotal: number;
 }
 
+export type OptionType = {
+  value: string;
+  label: string;
+};
+
+export interface NewQuiz {
+  id: number;
+  name: string;
+  difficulty: OptionType;
+  description: string;
+  quizImage: string | File;
+}
+
 const quizByPartService = create("/api/v1/quiz-by-participant");
 const quizSubmit = create("/api/v1/quiz-submit");
+const quizService = create("/api/v1/quiz");
 
 const postSubmitQuiz = async (data: SubmitAnswer) => {
   const res = await quizSubmit.create({ ...data });
+
+  return res.data;
+};
+
+const addNewQuiz = async (data: NewQuiz) => {
+  const request = new FormData();
+
+  request.append("name", data.name);
+  request.append("description", data.description);
+  request.append("difficulty", data.difficulty.value);
+  request.append("quizImage", data.quizImage);
+
+  const res = await quizService.create(request);
+
+  return res.data;
+};
+
+const updateQuiz = async (data: NewQuiz) => {
+  const request = new FormData();
+
+  request.append("id", data.id.toString());
+  request.append("name", data.name);
+  request.append("description", data.description);
+  request.append("difficulty", data.difficulty.value);
+  request.append("quizImage", data.quizImage);
+
+  const res = await quizService.update(request);
 
   return res.data;
 };
@@ -59,4 +100,4 @@ const postSubmitQuiz = async (data: SubmitAnswer) => {
 //   return res.data;
 // };
 
-export { quizByPartService, postSubmitQuiz };
+export { quizByPartService, postSubmitQuiz, addNewQuiz, updateQuiz };
