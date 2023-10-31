@@ -66,6 +66,10 @@ class HttpService {
     return apiClient.delete(this.endpoint, { data: { id: id } });
   }
 
+  deleteById(id: number) {
+    return apiClient.delete(this.endpoint + `/${id}`);
+  }
+
   create<T>(entity: T) {
     return apiClient.post(this.endpoint, entity);
   }

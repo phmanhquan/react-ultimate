@@ -57,9 +57,21 @@ export interface NewQuiz {
   quizImage: string | File;
 }
 
+export interface QuizAll {
+  id: number;
+  name: string;
+  difficulty: string;
+  description: string;
+  image: string | File;
+  createdAt: Date;
+  updatedAt: Date | null;
+  deletedAt: Date | null;
+}
+
 const quizByPartService = create("/api/v1/quiz-by-participant");
 const quizSubmit = create("/api/v1/quiz-submit");
 const quizService = create("/api/v1/quiz");
+const quizAllService = create("/api/v1/quiz/all");
 
 const postSubmitQuiz = async (data: SubmitAnswer) => {
   const res = await quizSubmit.create({ ...data });
@@ -94,10 +106,17 @@ const updateQuiz = async (data: NewQuiz) => {
   return res.data;
 };
 
-// const deleteParticipant = async (id: number) => {
-//   const res = await participantService.delete(id);
+const deleteQuiz = async (id: number) => {
+  const res = await quizService.deleteById(id);
 
-//   return res.data;
-// };
+  return res.data;
+};
 
-export { quizByPartService, postSubmitQuiz, addNewQuiz, updateQuiz };
+export {
+  quizByPartService,
+  quizAllService,
+  postSubmitQuiz,
+  addNewQuiz,
+  updateQuiz,
+  deleteQuiz,
+};
