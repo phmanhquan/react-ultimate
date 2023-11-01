@@ -13,4 +13,47 @@
     .list-detail{
         padding: 15px;
     }
+
+    .add-update-form{
+
+        .accordion-button::after {
+            background-image: none;
+        }
+
+        .add-new{
+            .label-upload{
+                 gap: 5px;
+                display: flex;
+                align-items: center;
+                border: none;
+                width: fit-content;
+                padding: 3px 10px;
+                border-radius: 5px;
+                background: #eeeeee;
+                cursor: point;
+
+                &:hover{
+                    background-color: #dcdcdc;
+                }
+            }
+
+            .img-preview{
+                height: 150px;
+                border: 1px solid #ccc;
+                border-style: dashed;
+                border-radius: 5px;
+                display:flex;
+                justify-content: center;
+                align-items: center;
+                color: #ccc;
+            }
+
+            img{
+                max-width: 100%;
+                max-height: 100%;
+            }
+        }
+       
+    }
+    
 }

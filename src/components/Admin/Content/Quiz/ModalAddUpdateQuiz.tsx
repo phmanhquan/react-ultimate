@@ -1,37 +1,59 @@
-import { useRef, useState } from "react";
+import React, { useEffect } from "react";
+import { Accordion } from "react-bootstrap";
 import Select, { SingleValue } from "react-select";
 import {
   NewQuiz,
   OptionType,
-  QuizAll,
   addNewQuiz,
+  updateQuiz,
 } from "../../../../services/quiz-service";
 import { toast } from "react-toastify";
-import TableQuiz from "./TableQuiz";
-import Accordion from "react-bootstrap/Accordion";
-import ModalDeleteQuiz from "./ModalDeleteQuiz";
-import { useAllQuizzes } from "../../../../hooks/useQuizzes";
-import { useAccordionButton } from "react-bootstrap/AccordionButton";
-import { Card } from "react-bootstrap";
-import { options } from "./ManageQuiz";
+import { FcPlus } from "react-icons/fc";
 
-export const ManageQuiz = () => {
-  const [quiz, setQuiz] = useState<NewQuiz>({
-    name: "",
-    difficulty: { value: "EASY", label: "EASY" },
-    description: "",
-    quizImage: "",
-  } as NewQuiz);
+const options = [
+  { value: "EASY", label: "EASY" },
+  { value: "MEDIUM", label: "MEDIUM" },
+  { value: "HARD", label: "HARD" },
+];
 
-  const inputRef: React.LegacyRef<HTMLInputElement> = useRef(null);
+interface Props {
+  quiz: NewQuiz;
+  isAddNew: boolean;
+  active: string;
+  previewImage: string;
+  isUpload: boolean;
+  inputRef: React.RefObject<HTMLInputElement>;
+  setIsUpload: React.Dispatch<React.SetStateAction<boolean>>;
+  setPreviewImage: React.Dispatch<React.SetStateAction<string>>;
+  setActive: React.Dispatch<React.SetStateAction<boolean>>;
+  reload: () => void;
+  setQuiz: React.Dispatch<React.SetStateAction<NewQuiz>>;
+}
 
-  const { quizzes, getData } = useAllQuizzes();
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [quizDetail, setQuizDetail] = useState<QuizAll>({} as QuizAll);
+const ModalAddUpdateQuiz = ({
+  isAddNew,
+  active,
+  quiz,
+  previewImage,
+  inputRef,
+  isUpload,
+  setIsUpload,
+  setPreviewImage,
+  setActive,
+  reload,
+  setQuiz,
+}: Props) => {
+  useEffect(() => {
+    if (quiz.quizImage && !isUpload) {
+      setPreviewImage(`data:image/jpeg;base64,${quiz.quizImage}`);
+    }
+  }, [quiz.quizImage, isUpload]);
 
   const handleChangeFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target && event.target.files && event.target.files[0]) {
+      setIsUpload(true);
       setQuiz({ ...quiz, quizImage: event.target.files[0] });
+      setPreviewImage(URL.createObjectURL(event.target.files[0]));
     }
   };
 
@@ -54,57 +76,34 @@ export const ManageQuiz = () => {
       return;
     }
 
-    const res = await addNewQuiz(quiz);
+    let res;
+    if (isAddNew) {
+      res = await addNewQuiz(quiz);
+    } else {
+      res = await updateQuiz(quiz);
+    }
+
     if (res && res.EC === 0) {
       toast.success(res.EM, { autoClose: 500 });
-      setQuiz({
-        name: "",
-        difficulty: { value: "EASY", label: "EASY" },
-        description: "",
-        quizImage: "",
-      } as NewQuiz);
+      setActive(false);
+      await reload();
       if (inputRef && inputRef.current) inputRef.current.value = "";
     } else {
       toast.error(res.EM);
     }
   };
 
-  const handleDeleteQuiz = (id: number) => {
-    setShowDeleteModal(true);
-    setQuizDetail(quizzes.find((quiz) => quiz.id === id) as QuizAll);
-  };
-
-  const [active, setActive] = useState("");
-
-  const handleTest = useAccordionButton("0", () => setActive("0"));
-
   return (
-    <div className="quiz-container">
-      <Accordion defaultActiveKey="0">
-        <Card>
-          <Card.Header>
-            <CustomToggle eventKey="0">Click me!</CustomToggle>
-          </Card.Header>
-          <Accordion.Collapse eventKey="0">
-            <Card.Body>Hello! I'm the body</Card.Body>
-          </Accordion.Collapse>
-        </Card>
-        <Card>
-          <Card.Header>
-            <CustomToggle eventKey="1">Click me!</CustomToggle>
-          </Card.Header>
-          <Accordion.Collapse eventKey="1">
-            <Card.Body>Hello! I'm another body</Card.Body>
-          </Accordion.Collapse>
-        </Card>
-      </Accordion>
-      <Accordion defaultActiveKey={active}>
+    <>
+      <Accordion activeKey={active}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>Manage Quiz</Accordion.Header>
           <Accordion.Body>
             <div className="add-new">
               <fieldset className="border rounded-3 p-3">
-                <legend className="float-none w-auto px-3">Add new Quiz</legend>
+                <legend className="float-none w-auto px-3">
+                  {isAddNew ? "Add New Quiz" : "Update Quiz"}
+                </legend>
                 <div className="form-floating mb-3">
                   <input
                     type="text"
@@ -139,15 +138,26 @@ export const ManageQuiz = () => {
                   ></Select>
                 </div>
                 <div className="more-action form-group">
-                  <label className="mb-1">Upload Image</label>
+                  <label className="mb-1 label-upload" htmlFor="labelUpload">
+                    <FcPlus /> Upload Image
+                  </label>
                   <input
                     ref={inputRef}
                     type="file"
                     className="form-control"
+                    hidden
+                    id="labelUpload"
                     onChange={(event) => {
                       handleChangeFile(event);
                     }}
                   />
+                </div>
+                <div className="col-md-12 img-preview">
+                  {previewImage ? (
+                    <img src={previewImage} alt="" />
+                  ) : (
+                    <span>Preview Image</span>
+                  )}
                 </div>
                 <div className="mt-3">
                   <button
@@ -162,21 +172,8 @@ export const ManageQuiz = () => {
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
-      <button onClick={handleTest} className="btn btn-primary">
-        stestse
-      </button>
-      <div className="list-detail">
-        <TableQuiz
-          quizzes={quizzes}
-          onDelete={(id) => handleDeleteQuiz(id)}
-        ></TableQuiz>
-      </div>
-      <ModalDeleteQuiz
-        loadTable={getData}
-        data={quizDetail}
-        show={showDeleteModal}
-        onHide={() => setShowDeleteModal(false)}
-      ></ModalDeleteQuiz>
-    </div>
+    </>
   );
 };
+
+export default ModalAddUpdateQuiz;

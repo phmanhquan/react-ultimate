@@ -2,12 +2,11 @@ import { QuizAll } from "../../../../services/quiz-service";
 
 interface Props {
   quizzes: QuizAll[];
-  // onUpdate: (id: number) => void;
-  // onView: (id: number) => void;
+  onUpdate: (id: number) => void;
   onDelete: (id: number) => void;
 }
 
-const TableQuiz = ({ quizzes, onDelete }: Props) => {
+const TableQuiz = ({ quizzes, onDelete, onUpdate }: Props) => {
   return (
     <>
       <div>List Quizzes:</div>
@@ -32,7 +31,12 @@ const TableQuiz = ({ quizzes, onDelete }: Props) => {
                   <td>{quiz.description}</td>
                   <td>{quiz.difficulty}</td>
                   <td style={{ display: "flex", gap: "15px" }}>
-                    <button className="btn btn-warning">Edit</button>
+                    <button
+                      onClick={() => onUpdate(quiz.id)}
+                      className="btn btn-warning"
+                    >
+                      Edit
+                    </button>
                     <button
                       onClick={() => onDelete(quiz.id)}
                       className="btn btn-danger"

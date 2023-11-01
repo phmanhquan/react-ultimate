@@ -1,9 +1,9 @@
 import { Button, Modal } from "react-bootstrap";
 import { toast } from "react-toastify";
-import { QuizAll, deleteQuiz } from "../../../../services/quiz-service";
+import { NewQuiz, deleteQuiz } from "../../../../services/quiz-service";
 
 interface Props {
-  data: QuizAll;
+  data: NewQuiz;
   show: boolean;
   onHide: () => void;
   loadTable: () => void;
