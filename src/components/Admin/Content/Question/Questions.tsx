@@ -178,26 +178,22 @@ const Questions = () => {
     //validate data
 
     //Submit questions
-    await Promise.all(
-      questions.map(async (question) => {
-        const questionResponse = await addQuestion({
-          quiz_id: +selectedQuiz.value,
-          description: question.description,
-          questionImage: question.imageFile,
-        } as NewQuestion);
+    for (const question of questions) {
+      const questionResponse = await addQuestion({
+        quiz_id: +selectedQuiz.value,
+        description: question.description,
+        questionImage: question.imageFile,
+      } as NewQuestion);
 
-        //Submit answers
-        await Promise.all(
-          question.answers.map(async (answer) => {
-            await addAnswer({
-              question_id: +questionResponse.DT.id,
-              description: answer.description,
-              correct_answer: answer.isCorrect,
-            } as NewAnswer);
-          })
-        );
-      })
-    );
+      //Submit answers
+      for (const answer of question.answers) {
+        await addAnswer({
+          question_id: +questionResponse.DT.id,
+          description: answer.description,
+          correct_answer: answer.isCorrect,
+        } as NewAnswer);
+      }
+    }
   };
 
   return (
