@@ -12,6 +12,7 @@
   "dependencies": {
     "@redux-devtools/extension": "^3.2.5",
     "@types/lodash": "^4.14.200",
+    "@types/uuid": "^9.0.6",
     "axios": "^1.5.1",
     "bootstrap": "^5.3.2",
     "buffer": "^6.0.3",
@@ -31,7 +32,8 @@
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.2",
-    "sass": "^1.69.1"
+    "sass": "^1.69.1",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/nprogress": "^0.2.2",

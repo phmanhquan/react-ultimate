@@ -1,10 +1,5 @@
+import { Answers } from "./answer-service";
 import create from "./http-service";
-
-export interface Answers {
-  id: number;
-  description: string;
-  isSelected: boolean;
-}
 
 export interface Question {
   id: number;
@@ -13,26 +8,52 @@ export interface Question {
   answers: Answers;
 }
 
+export interface NewQuestion {
+  id: number;
+  quiz_id: number;
+  description: string;
+  questionImage: string | File;
+}
+
+interface DeleteQuestion {
+  id: number;
+  quizId: number;
+}
+
 const questionByQuiz = create("/api/v1/questions-by-quiz");
-// const participantSubService = create("/api/v1/participant/all");
+const questionService = create("/api/v1/question");
 
-// const updateParticipant = async (data: Participant) => {
-//   const request = new FormData();
+const addQuestion = async (data: NewQuestion) => {
+  const request = new FormData();
 
-//   request.append("id", data.id.toString());
-//   request.append("username", data.username);
-//   request.append("role", data.role);
-//   request.append("userImage", data.image);
+  request.append("quiz_id", data.quiz_id.toString());
+  request.append("description", data.description);
+  request.append("questionImage", data.questionImage);
 
-//   const res = await participantService.update(request);
+  const res = await questionService.create(request);
 
-//   return res.data;
-// };
+  return res.data;
+};
 
-// const deleteParticipant = async (id: number) => {
-//   const res = await participantService.delete(id);
+const updateQuestion = async (data: NewQuestion) => {
+  const request = new FormData();
 
-//   return res.data;
-// };
+  request.append("id", data.id.toString());
+  request.append("quiz_id", data.quiz_id.toString());
+  request.append("description", data.description);
+  request.append("questionImage", data.questionImage);
 
-export { questionByQuiz };
+  const res = await questionService.update(request);
+
+  return res.data;
+};
+
+const deleteQuestion = async (data: NewQuestion) => {
+  const request = { id: data.id, quizId: data.quiz_id } as DeleteQuestion;
+
+  const res = await questionService.deleteByData<DeleteQuestion>(request);
+
+  return res.data;
+};
+
+export { questionByQuiz, addQuestion, updateQuestion, deleteQuestion };

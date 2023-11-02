@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
 import { CanceledError } from "../services/api-client";
-import {
-  Answers,
-  Question,
-  questionByQuiz,
-} from "../services/question-service";
+import { Question, questionByQuiz } from "../services/question-service";
 import _ from "lodash";
+import { Answers } from "../services/answer-service";
 
 export interface DataQuestion {
   questionId: string;
