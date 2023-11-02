@@ -14,7 +14,7 @@ import _ from "lodash";
 interface QuestionData {
   id: string;
   description: string;
-  imageFile: string;
+  imageFile: string | File;
   imageName: string;
   answers: {
     id: string;
@@ -22,6 +22,22 @@ interface QuestionData {
     isCorrect: boolean;
   }[];
 }
+
+const newData = [
+  {
+    id: uuidv4(),
+    description: "",
+    imageFile: "",
+    imageName: "0 file is uploaded",
+    answers: [
+      {
+        id: uuidv4(),
+        description: "",
+        isCorrect: false,
+      },
+    ],
+  },
+];
 
 const Questions = () => {
   const options = [
@@ -31,21 +47,7 @@ const Questions = () => {
   ];
 
   const [selectedQuiz, setSelectedQuiz] = useState({});
-  const [questions, setQuestions] = useState<QuestionData[]>([
-    {
-      id: uuidv4(),
-      description: "question 1",
-      imageFile: "",
-      imageName: "",
-      answers: [
-        {
-          id: uuidv4(),
-          description: "answer 1",
-          isCorrect: false,
-        },
-      ],
-    },
-  ]);
+  const [questions, setQuestions] = useState<QuestionData[]>(newData);
 
   const handleAddRemoveQuestion = (isAdd: boolean, id: string) => {
     if (isAdd) {
@@ -79,23 +81,87 @@ const Questions = () => {
   ) => {
     const questionClone = _.cloneDeep(questions);
     const index = questionClone.findIndex((item) => item.id === questionId);
-    if (isAdd) {
-      const newAnswer = {
-        id: uuidv4(),
-        description: "",
-        isCorrect: false,
-      };
+    if (index > -1) {
+      if (isAdd) {
+        const newAnswer = {
+          id: uuidv4(),
+          description: "",
+          isCorrect: false,
+        };
 
-      questionClone[index].answers.push(newAnswer);
+        questionClone[index].answers.push(newAnswer);
+      } else {
+        questionClone[index].answers = questionClone[index].answers.filter(
+          (item) => item.id !== answerId
+        );
+      }
       setQuestions(questionClone);
-    } else {
-      questionClone[index].answers = questionClone[index].answers.filter(
-        (item) => item.id !== answerId
+    }
+  };
+
+  const handleOnChange = (
+    isQuestion: boolean,
+    questionId: string,
+    answerId: string,
+    description: string
+  ) => {
+    const questionClone = _.cloneDeep(questions);
+    const index = questionClone.findIndex((item) => item.id === questionId);
+    if (index > -1) {
+      if (isQuestion) {
+        questionClone[index].description = description;
+      } else {
+        const indexAnswer = questionClone[index].answers.findIndex(
+          (item) => item.id === answerId
+        );
+        questionClone[index].answers[indexAnswer].description = description;
+      }
+      setQuestions(questionClone);
+    }
+  };
+
+  const handleOnChangeFile = (
+    questionId: string,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const questionClone = _.cloneDeep(questions);
+    const index = questionClone.findIndex((item) => item.id === questionId);
+    if (
+      index > -1 &&
+      event.target &&
+      event.target.files &&
+      event.target.files[0]
+    ) {
+      questionClone[index].imageFile = event.target.files[0];
+      questionClone[index].imageName = event.target.files[0].name;
+      //   setPreviewImage(URL.createObjectURL(event.target.files[0]));
+    }
+    setQuestions(questionClone);
+  };
+
+  const handleCheckBox = (
+    answerId: string,
+    questionId: string,
+    checked: boolean
+  ) => {
+    const questionClone = _.cloneDeep(questions);
+    const index = questionClone.findIndex((item) => item.id === questionId);
+    if (index > -1) {
+      questionClone[index].answers = questionClone[index].answers.map(
+        (answer) => {
+          if (answer.id === answerId) {
+            answer.isCorrect = checked;
+          }
+          return answer;
+        }
       );
       setQuestions(questionClone);
     }
   };
 
+  const handleSubmitQuestion = () => {
+    console.log();
+  };
   return (
     <div className="questions-container">
       <div className="title">Manage Questions</div>
@@ -128,16 +194,29 @@ const Questions = () => {
                       className="form-control"
                       placeholder="Description"
                       value={question.description}
-                      //   onChange={(e) => setQuiz({ ...quiz, name: e.target.value })}
+                      onChange={(e) =>
+                        handleOnChange(true, question.id, "", e.target.value)
+                      }
                     />
                     <label>Question {index + 1} 's description</label>
                   </div>
                   <div className="group-upload">
-                    <label>
+                    <label htmlFor={`${question.id}`}>
                       <RiImageAddFill className="label-upload" />
                     </label>
-                    <input type="file" hidden></input>
-                    <span>0 file is uploaded</span>
+                    <input
+                      onChange={(event) =>
+                        handleOnChangeFile(question.id, event)
+                      }
+                      type="file"
+                      hidden
+                      id={`${question.id}`}
+                    ></input>
+                    <span>
+                      {question.imageName
+                        ? question.imageName
+                        : "0 file is uploaded"}
+                    </span>
                   </div>
                   <div className="btn-add">
                     <span
@@ -165,6 +244,13 @@ const Questions = () => {
                           className="form-check-input is-correct"
                           type="checkbox"
                           checked={answer.isCorrect}
+                          onChange={(event) =>
+                            handleCheckBox(
+                              answer.id,
+                              question.id,
+                              event.target.checked
+                            )
+                          }
                         />
                         <div className="form-floating answer-name">
                           <input
@@ -172,7 +258,14 @@ const Questions = () => {
                             className="form-control"
                             placeholder="Answer"
                             value={answer.description}
-                            //   onChange={(e) => setQuiz({ ...quiz, name: e.target.value })}
+                            onChange={(e) =>
+                              handleOnChange(
+                                false,
+                                question.id,
+                                answer.id,
+                                e.target.value
+                              )
+                            }
                           />
                           <label>Answer {index + 1}</label>
                         </div>
@@ -208,6 +301,16 @@ const Questions = () => {
               </div>
             );
           })}
+        {questions && questions.length > 0 && (
+          <div>
+            <button
+              onClick={() => handleSubmitQuestion()}
+              className="btn btn-warning"
+            >
+              Save Question
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
