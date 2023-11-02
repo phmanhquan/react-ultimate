@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Select, { SingleValue } from "react-select";
+import Select from "react-select";
 import "./Questions.scss";
 import {
   HiDocumentPlus,
@@ -10,11 +10,12 @@ import {
 import { RiImageAddFill } from "react-icons/ri";
 import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
+import Lightbox from "yet-another-react-lightbox";
 
 interface QuestionData {
   id: string;
   description: string;
-  imageFile: string | File;
+  imageFile: Blob;
   imageName: string;
   answers: {
     id: string;
@@ -22,13 +23,23 @@ interface QuestionData {
     isCorrect: boolean;
   }[];
 }
+interface PreviewImage {
+  view: boolean;
+  image: Blob;
+  name: string;
+}
+
+const newImage = {
+  view: false,
+  image: new Blob(),
+  name: "",
+} as PreviewImage;
 
 const newData = [
   {
     id: uuidv4(),
     description: "",
-    imageFile: "",
-    imageName: "0 file is uploaded",
+    imageName: "",
     answers: [
       {
         id: uuidv4(),
@@ -37,7 +48,7 @@ const newData = [
       },
     ],
   },
-];
+] as QuestionData[];
 
 const Questions = () => {
   const options = [
@@ -47,6 +58,7 @@ const Questions = () => {
   ];
 
   const [selectedQuiz, setSelectedQuiz] = useState({});
+  const [previewImage, setPreviewImage] = useState<PreviewImage>(newImage);
   const [questions, setQuestions] = useState<QuestionData[]>(newData);
 
   const handleAddRemoveQuestion = (isAdd: boolean, id: string) => {
@@ -56,7 +68,6 @@ const Questions = () => {
         {
           id: uuidv4(),
           description: "",
-          imageFile: "",
           imageName: "",
           answers: [
             {
@@ -65,7 +76,7 @@ const Questions = () => {
               isCorrect: false,
             },
           ],
-        },
+        } as QuestionData,
       ]);
     } else {
       let questionClone = _.cloneDeep(questions);
@@ -162,6 +173,7 @@ const Questions = () => {
   const handleSubmitQuestion = () => {
     console.log();
   };
+
   return (
     <div className="questions-container">
       <div className="title">Manage Questions</div>
@@ -213,9 +225,22 @@ const Questions = () => {
                       id={`${question.id}`}
                     ></input>
                     <span>
-                      {question.imageName
-                        ? question.imageName
-                        : "0 file is uploaded"}
+                      {question.imageName ? (
+                        <span
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            setPreviewImage({
+                              view: true,
+                              image: question.imageFile,
+                              name: question.imageName,
+                            });
+                          }}
+                        >
+                          {question.imageName}
+                        </span>
+                      ) : (
+                        "0 file is uploaded"
+                      )}
                     </span>
                   </div>
                   <div className="btn-add">
@@ -310,6 +335,18 @@ const Questions = () => {
               Save Question
             </button>
           </div>
+        )}
+        {previewImage.view && (
+          <Lightbox
+            open={previewImage.view}
+            close={() => setPreviewImage(newImage)}
+            slides={[
+              {
+                src: URL.createObjectURL(previewImage.image),
+                alt: previewImage.name,
+              },
+            ]}
+          />
         )}
       </div>
     </div>
