@@ -11,6 +11,12 @@ import { RiImageAddFill } from "react-icons/ri";
 import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
 import Lightbox from "yet-another-react-lightbox";
+import { useAllQuizzes } from "../../../../hooks/useQuizzes";
+import {
+  NewQuestion,
+  addQuestion,
+} from "../../../../services/question-service";
+import { NewAnswer, addAnswer } from "../../../../services/answer-service";
 
 interface QuestionData {
   id: string;
@@ -51,15 +57,13 @@ const newData = [
 ] as QuestionData[];
 
 const Questions = () => {
-  const options = [
-    { value: "EASY", label: "EASY" },
-    { value: "MEDIUM", label: "MEDIUM" },
-    { value: "HARD", label: "HARD" },
-  ];
-
-  const [selectedQuiz, setSelectedQuiz] = useState({});
   const [previewImage, setPreviewImage] = useState<PreviewImage>(newImage);
   const [questions, setQuestions] = useState<QuestionData[]>(newData);
+  const { quizzes } = useAllQuizzes();
+  const options = quizzes.map((item) => {
+    return { value: item.id, label: item.name };
+  });
+  const [selectedQuiz, setSelectedQuiz] = useState(options[0]);
 
   const handleAddRemoveQuestion = (isAdd: boolean, id: string) => {
     if (isAdd) {
@@ -170,8 +174,30 @@ const Questions = () => {
     }
   };
 
-  const handleSubmitQuestion = () => {
-    console.log();
+  const handleSubmitQuestion = async () => {
+    //validate data
+
+    //Submit questions
+    await Promise.all(
+      questions.map(async (question) => {
+        const questionResponse = await addQuestion({
+          quiz_id: +selectedQuiz.value,
+          description: question.description,
+          questionImage: question.imageFile,
+        } as NewQuestion);
+
+        //Submit answers
+        await Promise.all(
+          question.answers.map(async (answer) => {
+            await addAnswer({
+              question_id: +questionResponse.DT.id,
+              description: answer.description,
+              correct_answer: answer.isCorrect,
+            } as NewAnswer);
+          })
+        );
+      })
+    );
   };
 
   return (
@@ -182,14 +208,13 @@ const Questions = () => {
         <div className="col-6 form-group">
           <label className="mb-2">Select Quiz:</label>
           <Select
-            // value and options must same type
-            //   value={quiz.difficulty}
             defaultValue={selectedQuiz}
             options={options}
-            placeholder={"Quiz type..."}
-            //   onChange={(event) => {
-            //     handleSelectType(event);
-            //   }}
+            placeholder={"Quiz..."}
+            onChange={(event) => {
+              if (event)
+                setSelectedQuiz({ value: event.value, label: event.label });
+            }}
           ></Select>
         </div>
         <div className="mt-3 mb-2"> Add questions:</div>

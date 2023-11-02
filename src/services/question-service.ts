@@ -12,7 +12,7 @@ export interface NewQuestion {
   id: number;
   quiz_id: number;
   description: string;
-  questionImage: string | File;
+  questionImage: Blob;
 }
 
 interface DeleteQuestion {
