@@ -17,6 +17,7 @@ import {
   addQuestion,
 } from "../../../../services/question-service";
 import { NewAnswer, addAnswer } from "../../../../services/answer-service";
+import { toast } from "react-toastify";
 
 interface QuestionData {
   id: string;
@@ -175,7 +176,41 @@ const Questions = () => {
   };
 
   const handleSubmitQuestion = async () => {
+    //validate quiz
+    if (_.isEmpty(selectedQuiz)) {
+      toast.error("Please choose a Quiz!");
+      return;
+    }
+
     //validate data
+    let isValid = true;
+    let message = "";
+    for (let i = 0; i < questions.length; i++) {
+      if (!questions[i].description) {
+        isValid = false;
+        message = `Not empty Question ${i + 1}`;
+        break;
+      }
+
+      let isCorrect = false;
+      for (let j = 0; j < questions[i].answers.length; j++) {
+        if (!questions[i].answers[j].description) {
+          isValid = false;
+          message = `Not empty Answer ${j + 1} at Question ${i + 1}`;
+          break;
+        }
+
+        if (questions[i].answers[j].isCorrect) isCorrect = true;
+      }
+      if (!isValid) break;
+
+      if (!isCorrect) {
+        isValid = false;
+        message = `At least one correct answer at Question ${i + 1}`;
+        break;
+      }
+    }
+    if (!isValid) toast.error(message);
 
     //Submit questions
     for (const question of questions) {
@@ -194,6 +229,10 @@ const Questions = () => {
         } as NewAnswer);
       }
     }
+
+    toast.success("Create questions and answers success!");
+    setPreviewImage(newImage);
+    setQuestions(newData);
   };
 
   return (
