@@ -9,6 +9,7 @@ interface Props {
   onUpdate: (id: number) => void;
   onView: (id: number) => void;
   onDelete: (id: number) => void;
+  onAssignQuiz: (id: number) => void;
   onChangePage: (page: number) => void;
 }
 
@@ -20,6 +21,7 @@ const TableUserPaginate = ({
   onUpdate,
   onView,
   onDelete,
+  onAssignQuiz,
   onChangePage,
 }: Props) => {
   return (
@@ -61,6 +63,12 @@ const TableUserPaginate = ({
                       onClick={() => onDelete(user.id)}
                     >
                       Delete
+                    </button>
+                    <button
+                      className="btn btn-warning mx-3"
+                      onClick={() => onAssignQuiz(user.id)}
+                    >
+                      Assign Quiz
                     </button>
                   </td>
                 </tr>

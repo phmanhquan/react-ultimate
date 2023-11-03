@@ -2,17 +2,27 @@ import ModalCreateUpdateUser from "./ModalCreateUpdateUser";
 import "./ManageUser.scss";
 import { FcPlus } from "react-icons/fc";
 import { useState } from "react";
-// import TableUser from "./TableUser";
 import { useParticipantsPaginate } from "../../../hooks/useParticipants";
 import { Participant } from "../../../services/participant-service";
 import ModalDeleteUser from "./ModalDeleteUser";
 import TableUserPaginate from "./TableUserPaginate";
-// import { toast } from "react-toastify";
+import AssignQuiz, { AssignData } from "./AssignQuiz";
+import { useAllQuizzes } from "../../../hooks/useQuizzes";
+import { v4 as uuidv4 } from "uuid";
+
+const initData = [
+  {
+    id: uuidv4(),
+    data: { value: -1, label: "" },
+    isValid: true,
+  },
+] as AssignData[];
 
 const ManageUser = () => {
-  const LIMIT_USER = 3;
+  const LIMIT_USER = 5;
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showAssignModal, setShowAssignModal] = useState(false);
   const [pageView, setPageView] = useState(1);
   const { participants, getData, totalPage } = useParticipantsPaginate({
     page: pageView,
@@ -21,9 +31,14 @@ const ManageUser = () => {
   const [participant, setParticipant] = useState<Participant>(
     {} as Participant
   );
+  const { quizzes } = useAllQuizzes();
+  const options = quizzes.map((item) => {
+    return { value: item.id, label: item.name };
+  });
   const [type, setType] = useState<"Add" | "Update" | "View">("Add");
   const [title, setTitle] = useState("");
   const [showPreviewImage, setShowPreviewImage] = useState(false);
+  const [assignData, setAssignData] = useState<AssignData[]>(initData);
 
   const handleAddUser = () => {
     setType("Add");
@@ -59,6 +74,12 @@ const ManageUser = () => {
     setParticipant(participants.find((part) => part.id === id) as Participant);
   };
 
+  const handleAssignQuiz = (id: number) => {
+    setAssignData(initData);
+    setShowAssignModal(true);
+    setParticipant(participants.find((part) => part.id === id) as Participant);
+  };
+
   const handleChangePage = (page: number) => {
     setPageView(page + 1);
   };
@@ -84,6 +105,7 @@ const ManageUser = () => {
             onView={(id) => handleViewUser(id)}
             onUpdate={(id) => handleUpdateUser(id)}
             onDelete={(id) => handleDeleteUser(id)}
+            onAssignQuiz={(id) => handleAssignQuiz(id)}
             onChangePage={(page) => handleChangePage(page)}
             listUser={participants}
           />
@@ -109,6 +131,15 @@ const ManageUser = () => {
           onHide={() => setShowDeleteModal(false)}
           currentPage={pageView}
         ></ModalDeleteUser>
+        <AssignQuiz
+          userId={participant.id}
+          email={participant.email}
+          show={showAssignModal}
+          onHide={() => setShowAssignModal(false)}
+          options={options}
+          quizzes={assignData}
+          setQuizzes={setAssignData}
+        />
       </div>
     </div>
   );

@@ -69,9 +69,20 @@ export interface QuizAll {
 }
 
 const quizByPartService = create("/api/v1/quiz-by-participant");
+const quizAssignToUser = create("/api/v1/quiz-assign-to-user");
 const quizSubmit = create("/api/v1/quiz-submit");
 const quizService = create("/api/v1/quiz");
 const quizAllService = create("/api/v1/quiz/all");
+
+const assignQuiz = async (userId: number, quizId: number) => {
+  const request = new FormData();
+
+  request.append("quizId", quizId.toString());
+  request.append("userId", userId.toString());
+  const res = await quizAssignToUser.create(request);
+
+  return res.data;
+};
 
 const postSubmitQuiz = async (data: SubmitAnswer) => {
   const res = await quizSubmit.create({ ...data });
@@ -119,4 +130,5 @@ export {
   addNewQuiz,
   updateQuiz,
   deleteQuiz,
+  assignQuiz,
 };

@@ -210,7 +210,10 @@ const Questions = () => {
         break;
       }
     }
-    if (!isValid) toast.error(message);
+    if (!isValid) {
+      toast.error(message);
+      return;
+    }
 
     //Submit questions
     for (const question of questions) {
@@ -230,7 +233,7 @@ const Questions = () => {
       }
     }
 
-    toast.success("Create questions and answers success!");
+    toast.success("Create questions and answers success!", { autoClose: 500 });
     setPreviewImage(newImage);
     setQuestions(newData);
   };
