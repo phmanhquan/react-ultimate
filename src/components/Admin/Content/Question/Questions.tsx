@@ -247,6 +247,7 @@ const Questions = () => {
 
     toast.success("Create questions and answers success!", { autoClose: 500 });
     setPreviewImage(newImage);
+    setSelectedQuiz({} as { value: number; label: string });
     setQuestions(newData);
   };
 
@@ -258,7 +259,7 @@ const Questions = () => {
         <div className="col-6 form-group">
           <label className="mb-2">Select Quiz:</label>
           <Select
-            defaultValue={selectedQuiz}
+            value={selectedQuiz}
             options={options}
             placeholder={"Quiz..."}
             onChange={(event) => {

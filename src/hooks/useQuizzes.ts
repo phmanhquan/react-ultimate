@@ -101,25 +101,18 @@ const useQuizDetail = (quizId: string) => {
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    getData(quizId);
+    if (quizId) getData(quizId);
   }, [quizId]);
 
   const getData = async (id: string) => {
     setLoading(true);
-
-    if (!id) {
-      setError("id is empty.");
-      setQuizDetail([]);
-      setLoading(false);
-      return () => cancel();
-    }
 
     const { response, cancel } = await quizDetailService.getDetail<QuizDetail>(
       id
     );
 
     response
-      .then((res) => {
+      .then(async (res) => {
         if (!res.data) {
           setError("Not found data.");
           setLoading(false);
@@ -145,9 +138,16 @@ const useQuizDetail = (quizId: string) => {
                 const newQuestion = {
                   id: uuidv4(),
                   description: question.description,
-                  imageName: question.imageName,
                   answers: newAnswers,
                 } as QuestionData;
+
+                if (question.imageFile) {
+                  const base64Response = await fetch(
+                    `data:image/png;base64,${question.imageFile}`
+                  );
+                  newQuestion.imageFile = await base64Response.blob();
+                  newQuestion.imageName = `Question-${question.id}`;
+                }
 
                 newData.push(newQuestion);
               }
