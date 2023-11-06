@@ -74,12 +74,18 @@ export interface QuizDetail {
   qa: QuestionDetail[];
 }
 
+export interface AddQuizDetail {
+  quizId: string | number;
+  questions: QuestionDetail[];
+}
+
 const quizByPartService = create("/api/v1/quiz-by-participant");
 const quizAssignToUser = create("/api/v1/quiz-assign-to-user");
 const quizSubmit = create("/api/v1/quiz-submit");
 const quizService = create("/api/v1/quiz");
 const quizAllService = create("/api/v1/quiz/all");
 const quizDetailService = create("/api/v1/quiz-with-qa");
+const quizUpsertQA = create("/api/v1/quiz-upsert-qa");
 
 const assignQuiz = async (userId: number, quizId: number) => {
   const request = new FormData();
@@ -124,6 +130,12 @@ const updateQuiz = async (data: NewQuiz) => {
   return res.data;
 };
 
+const upsertQuizQA = async (data: AddQuizDetail) => {
+  const res = await quizUpsertQA.create(data);
+
+  return res.data;
+};
+
 const deleteQuiz = async (id: number) => {
   const res = await quizService.deleteById(id);
 
@@ -139,4 +151,5 @@ export {
   updateQuiz,
   deleteQuiz,
   assignQuiz,
+  upsertQuizQA,
 };

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { CanceledError } from "../services/api-client";
 import {
+  AddQuizDetail,
   Quiz,
   QuizAll,
   QuizDetail,
@@ -8,8 +9,6 @@ import {
   quizByPartService,
   quizDetailService,
 } from "../services/quiz-service";
-import { QuestionData } from "../components/Admin/Content/Question/Questions";
-import { v4 as uuidv4 } from "uuid";
 
 const useQuizzes = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
@@ -96,7 +95,9 @@ const useAllQuizzes = () => {
 };
 
 const useQuizDetail = (quizId: string) => {
-  const [quizDetail, setQuizDetail] = useState<QuestionData[]>([]);
+  const [quizDetail, setQuizDetail] = useState<AddQuizDetail>(
+    {} as AddQuizDetail
+  );
   const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);
 
@@ -118,42 +119,21 @@ const useQuizDetail = (quizId: string) => {
           setLoading(false);
         } else {
           if (res.data.EC === 0) {
-            const newData = [] as QuestionData[];
             if (res.data.DT && res.data.DT.qa && res.data.DT.qa.length > 0) {
               for (const question of res.data.DT.qa) {
-                const newAnswers = [] as {
-                  id: string;
-                  description: string;
-                  isCorrect: boolean;
-                }[];
-
-                for (const answer of question.answers) {
-                  newAnswers.push({
-                    id: uuidv4(),
-                    description: answer.description,
-                    isCorrect: answer.isCorrect,
-                  });
-                }
-
-                const newQuestion = {
-                  id: uuidv4(),
-                  description: question.description,
-                  answers: newAnswers,
-                } as QuestionData;
-
                 if (question.imageFile) {
                   const base64Response = await fetch(
                     `data:image/png;base64,${question.imageFile}`
                   );
-                  newQuestion.imageFile = await base64Response.blob();
-                  newQuestion.imageName = `Question-${question.id}`;
+                  question.imageFile = await base64Response.blob();
+                  question.imageName = `image-${question.id}`;
                 }
-
-                newData.push(newQuestion);
+                setQuizDetail({
+                  quizId: +res.data.DT.quizId,
+                  questions: res.data.DT.qa,
+                });
               }
             }
-            setQuizDetail(newData);
-
             setError("");
             setLoading(false);
           } else {

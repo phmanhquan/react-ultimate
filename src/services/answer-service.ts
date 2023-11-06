@@ -14,7 +14,7 @@ export interface NewAnswer {
 }
 
 export interface AnswerDetail {
-  id: number;
+  id: number | string;
   description: string;
   isCorrect: boolean;
 }

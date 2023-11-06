@@ -21,9 +21,9 @@ interface DeleteQuestion {
 }
 
 export interface QuestionDetail {
-  id: number;
+  id: number | string;
   description: string;
-  imageFile: string;
+  imageFile: string | Blob;
   imageName: string;
   answers: AnswerDetail[];
 }
