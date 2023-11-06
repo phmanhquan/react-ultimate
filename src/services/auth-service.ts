@@ -1,3 +1,4 @@
+import { LoginInfo } from "../redux/action/userAction";
 import create from "./http-service";
 
 export interface Account {
@@ -9,6 +10,7 @@ export interface Account {
 
 const loginService = create("/api/v1/login");
 const registerService = create("/api/v1/register");
+const logoutService = create("/api/v1/logout");
 
 const login = async (data: Account) => {
   const request = new FormData();
@@ -34,16 +36,15 @@ const register = async (data: Account) => {
   return res.data;
 };
 
-// const deleteParticipant = async (id: number) => {
-//   const res = await participantService.delete(id);
+const logout = async (data: LoginInfo) => {
+  const request = new FormData();
 
-//   return res.data;
-// };
+  request.append("email", data.email);
+  request.append("refresh_token", data.refresh_token);
 
-export {
-  login,
-  register,
-  //   deleteParticipant,
-  //   participantService,
-  //   participantSubService,
+  const res = await logoutService.create(request);
+
+  return res.data;
 };
+
+export { login, register, logout };

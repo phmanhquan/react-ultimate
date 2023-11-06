@@ -46,6 +46,10 @@ const Login = () => {
     }
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") handleLogin();
+  };
+
   return (
     <div className="login-container">
       <div className="header">
@@ -81,6 +85,9 @@ const Login = () => {
             onChange={(event) =>
               setAccount({ ...account, password: event.target.value })
             }
+            onKeyDown={(event) => {
+              handleKeyDown(event);
+            }}
           />
         </div>
         <span className="forgot-password">Forgot password ?</span>
