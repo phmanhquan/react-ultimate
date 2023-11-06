@@ -85,6 +85,14 @@
                 &:hover{
                     color:red;
                 }
+
+                &.answered {
+                   background-color: #c6c6c6;
+                }
+
+                &.selected{
+                    color:red;
+                }
             }
 
         }
