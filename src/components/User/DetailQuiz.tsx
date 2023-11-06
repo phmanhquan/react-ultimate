@@ -10,8 +10,23 @@ import {
   postSubmitQuiz,
 } from "../../services/quiz-service";
 import ModalResult from "./ModalResult";
+import RightContent from "./Content/RightContent";
+import Lightbox from "yet-another-react-lightbox";
+
+export interface PreviewImage {
+  view: boolean;
+  image: Blob;
+  name: string;
+}
+
+const newImage = {
+  view: false,
+  image: new Blob(),
+  name: "",
+} as PreviewImage;
 
 const DetailQuiz = () => {
+  const [previewImage, setPreviewImage] = useState<PreviewImage>(newImage);
   const params = useParams();
   const location = useLocation();
   const quizId = params && params.id ? params.id.toString() : "";
@@ -86,6 +101,7 @@ const DetailQuiz = () => {
           <Question
             handleId={handleCheckbox}
             index={index}
+            viewImage={setPreviewImage}
             data={
               questions && questions.length > 0
                 ? questions[index]
@@ -115,12 +131,26 @@ const DetailQuiz = () => {
           </button>
         </div>
       </div>
-      <div className="right-content">right</div>
+      <div className="right-content">
+        <RightContent setIndex={setIndex} data={questions}></RightContent>
+      </div>
       <ModalResult
         show={isShowModalResult}
         setShowModal={setIsShowModalResult}
         data={dataModalResult}
       />
+      {previewImage.view && (
+        <Lightbox
+          open={previewImage.view}
+          close={() => setPreviewImage(newImage)}
+          slides={[
+            {
+              src: URL.createObjectURL(previewImage.image),
+              alt: previewImage.name,
+            },
+          ]}
+        />
+      )}
     </div>
   );
 };

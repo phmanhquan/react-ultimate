@@ -1,13 +1,15 @@
 import _ from "lodash";
 import { DataQuestion } from "../../hooks/useQuestions";
+import { PreviewImage } from "./DetailQuiz";
 
 interface Props {
   data: DataQuestion;
   index: number;
   handleId: (answerId: string, questionId: string) => void;
+  viewImage: React.Dispatch<React.SetStateAction<PreviewImage>>;
 }
 
-const Question = ({ data, index, handleId }: Props) => {
+const Question = ({ data, index, handleId, viewImage }: Props) => {
   if (_.isEmpty(data)) {
     return <></>;
   }
@@ -25,7 +27,21 @@ const Question = ({ data, index, handleId }: Props) => {
     <>
       {data.image ? (
         <div className="q-image">
-          <img src={`data:image/jpeg;base64,${data.image}`} />
+          <img
+            onClick={async () => {
+              const base64Response = await fetch(
+                `data:image/png;base64,${data.image}`
+              );
+              const imageFile = await base64Response.blob();
+
+              viewImage({
+                view: true,
+                image: imageFile,
+                name: `image-${index + 1}`,
+              });
+            }}
+            src={`data:image/jpeg;base64,${data.image}`}
+          />
         </div>
       ) : (
         <div className="q-image"></div>
