@@ -1,4 +1,4 @@
-import { Answers } from "./answer-service";
+import { AnswerDetail, Answers } from "./answer-service";
 import create from "./http-service";
 
 export interface Question {
@@ -18,6 +18,14 @@ export interface NewQuestion {
 interface DeleteQuestion {
   id: number;
   quizId: number;
+}
+
+export interface QuestionDetail {
+  id: number;
+  description: string;
+  imageFile: string;
+  imageName: string;
+  answers: AnswerDetail[];
 }
 
 const questionByQuiz = create("/api/v1/questions-by-quiz");

@@ -1,4 +1,5 @@
 import create from "./http-service";
+import { QuestionDetail } from "./question-service";
 
 export interface ParticipantQuiz {
   quiz_id: number;
@@ -68,11 +69,17 @@ export interface QuizAll {
   deletedAt: Date | null;
 }
 
+export interface QuizDetail {
+  quizId: string;
+  qa: QuestionDetail[];
+}
+
 const quizByPartService = create("/api/v1/quiz-by-participant");
 const quizAssignToUser = create("/api/v1/quiz-assign-to-user");
 const quizSubmit = create("/api/v1/quiz-submit");
 const quizService = create("/api/v1/quiz");
 const quizAllService = create("/api/v1/quiz/all");
+const quizDetailService = create("/api/v1/quiz-with-qa");
 
 const assignQuiz = async (userId: number, quizId: number) => {
   const request = new FormData();
@@ -126,6 +133,7 @@ const deleteQuiz = async (id: number) => {
 export {
   quizByPartService,
   quizAllService,
+  quizDetailService,
   postSubmitQuiz,
   addNewQuiz,
   updateQuiz,

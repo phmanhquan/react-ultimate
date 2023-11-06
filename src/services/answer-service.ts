@@ -13,6 +13,12 @@ export interface NewAnswer {
   correct_answer: boolean;
 }
 
+export interface AnswerDetail {
+  id: number;
+  description: string;
+  isCorrect: boolean;
+}
+
 const answerService = create("/api/v1/answer");
 // const participantSubService = create("/api/v1/participant/all");
 

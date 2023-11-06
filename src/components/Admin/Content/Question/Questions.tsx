@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Select from "react-select";
 import "./Questions.scss";
 import {
@@ -11,7 +11,7 @@ import { RiImageAddFill } from "react-icons/ri";
 import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
 import Lightbox from "yet-another-react-lightbox";
-import { useAllQuizzes } from "../../../../hooks/useQuizzes";
+import { useAllQuizzes, useQuizDetail } from "../../../../hooks/useQuizzes";
 import {
   NewQuestion,
   addQuestion,
@@ -19,7 +19,7 @@ import {
 import { NewAnswer, addAnswer } from "../../../../services/answer-service";
 import { toast } from "react-toastify";
 
-interface QuestionData {
+export interface QuestionData {
   id: string;
   description: string;
   imageFile: Blob;
@@ -59,12 +59,24 @@ const newData = [
 
 const Questions = () => {
   const [previewImage, setPreviewImage] = useState<PreviewImage>(newImage);
-  const [questions, setQuestions] = useState<QuestionData[]>(newData);
   const { quizzes } = useAllQuizzes();
   const options = quizzes.map((item) => {
     return { value: item.id, label: item.name };
   });
-  const [selectedQuiz, setSelectedQuiz] = useState(options[0]);
+
+  const [selectedQuiz, setSelectedQuiz] = useState(
+    {} as { value: number; label: string }
+  );
+
+  const { quizDetail } = useQuizDetail(
+    selectedQuiz && selectedQuiz.value ? selectedQuiz.value.toString() : ""
+  );
+
+  const [questions, setQuestions] = useState<QuestionData[]>(newData);
+
+  useEffect(() => {
+    setQuestions(quizDetail && quizDetail.length > 0 ? quizDetail : newData);
+  }, [quizDetail]);
 
   const handleAddRemoveQuestion = (isAdd: boolean, id: string) => {
     if (isAdd) {
