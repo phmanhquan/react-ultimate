@@ -7,6 +7,7 @@ import { UserState } from "../../redux/reducer/userReducer";
 import { NavDropdown } from "react-bootstrap";
 import { logout } from "../../services/auth-service";
 import { toast } from "react-toastify";
+import Language from "./Language";
 
 const Header = () => {
   const userState = useSelector<{ user: UserState }, UserState>(
@@ -27,7 +28,7 @@ const Header = () => {
     const res = await logout(userState?.account);
 
     if (res.EC === 0) {
-      toast.success(res.EM);
+      toast.success(res.EM, { autoClose: 500 });
       dispatch({ type: "LOGOUT_SUCCESS", payload: res });
     } else {
       toast.error(res.EM);
@@ -71,6 +72,7 @@ const Header = () => {
                 </NavDropdown.Item>
               </NavDropdown>
             )}
+            <Language />
           </Nav>
         </Navbar.Collapse>
       </Container>

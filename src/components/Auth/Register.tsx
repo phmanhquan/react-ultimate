@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Account, register } from "../../services/auth-service";
 import { toast } from "react-toastify";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
+import Language from "../Header/Language";
 
 const Register = () => {
   const [account, setAccount] = useState<Account>({
@@ -49,6 +50,7 @@ const Register = () => {
         >
           Log in
         </button>
+        <Language />
       </div>
       <div className="title col-4 mx-auto">React Ultimate</div>
       <div className="welcome col-4 mx-auto">Start your journey?</div>

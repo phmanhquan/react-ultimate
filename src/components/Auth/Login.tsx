@@ -5,6 +5,7 @@ import { Account, login } from "../../services/auth-service";
 import { toast } from "react-toastify";
 import { ImSpinner9 } from "react-icons/im";
 import { useDispatch } from "react-redux";
+import Language from "../Header/Language";
 
 const Login = () => {
   const [account, setAccount] = useState<Account>({
@@ -35,7 +36,7 @@ const Login = () => {
     const res = await login(account);
     if (res && res.EC === 0) {
       dispatch({ type: "LOGIN_SUCCESS", payload: res });
-      toast.success(res.EM);
+      toast.success(res.EM, { autoClose: 500 });
       setIsLoading(false);
       navigate("/");
     }
@@ -61,6 +62,7 @@ const Login = () => {
         >
           Sign Up
         </button>
+        <Language />
       </div>
       <div className="title col-4 mx-auto">React Ultimate</div>
       <div className="welcome col-4 mx-auto">Hello, who's this?</div>
