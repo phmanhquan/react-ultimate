@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import videoHome from "../../assets/video-home.mp4";
 import { UserState } from "../../redux/reducer/userReducer";
 import { useNavigate } from "react-router-dom";
+import { Trans, useTranslation } from "react-i18next";
 
 const HomePage = () => {
   const userState = useSelector<{ user: UserState }, UserState>(
@@ -11,6 +12,7 @@ const HomePage = () => {
 
   const isAuthenticated = userState?.isAuthenticated;
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <div className="homepage-container">
@@ -18,10 +20,9 @@ const HomePage = () => {
         <source src={videoHome} type="video/mp4" />
       </video>
       <div className="homepage-content">
-        <div className="title-1">There's a better way to ask</div>
+        <div className="title-1">{t("homePage.title1")}</div>
         <div className="title-2">
-          You don't want to make a boring form. And your audience won't answer
-          one. Create a typeform instead-and make everyone happy.
+          <Trans i18nKey="homePage.title2" components={{ 1: <br /> }} />
         </div>
         <div className="title-3">
           {isAuthenticated ? (
@@ -30,7 +31,7 @@ const HomePage = () => {
                 navigate("/users");
               }}
             >
-              Doing Quiz Now
+              {t("homePage.title3a")}
             </button>
           ) : (
             <button
@@ -38,7 +39,7 @@ const HomePage = () => {
                 navigate("/login");
               }}
             >
-              Get's started. It's free
+              {t("homePage.title3b")}
             </button>
           )}
         </div>

@@ -9,6 +9,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "nprogress/nprogress.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import "yet-another-react-lightbox/styles.css";
+import "./utils/i18n.ts";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>

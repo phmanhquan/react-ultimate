@@ -2,10 +2,11 @@ import { RouterProvider } from "react-router-dom";
 import router from "./routing/routes";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { Suspense } from "react";
 
 const Layout = () => {
   return (
-    <>
+    <Suspense fallback={<div>Loading...</div>}>
       <RouterProvider router={router}></RouterProvider>
       <ToastContainer
         position="top-center"
@@ -19,7 +20,7 @@ const Layout = () => {
         pauseOnHover
         theme="light"
       />
-    </>
+    </Suspense>
   );
 };
 
