@@ -1,51 +1,23 @@
 import {
   Bar,
   BarChart,
-  CartesianGrid,
+  // CartesianGrid,
   Legend,
   ResponsiveContainer,
   Tooltip,
-  XAxis,
+  // XAxis,
   YAxis,
 } from "recharts";
 import "./DashBoard.scss";
+import { useOverview } from "../../../hooks/useDashboard";
 
 const DashBoard = () => {
+  const { overview } = useOverview();
   const data = [
     {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
-    },
-    {
-      name: "Page B",
-      uv: 3000,
-      pv: 1398,
-    },
-    {
-      name: "Page C",
-      uv: 2000,
-      pv: 9800,
-    },
-    {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-    },
-    {
-      name: "Page E",
-      uv: 1890,
-      pv: 4800,
-    },
-    {
-      name: "Page F",
-      uv: 2390,
-      pv: 3800,
-    },
-    {
-      name: "Page G",
-      uv: 3490,
-      pv: 4300,
+      quizzes: overview?.others?.countQuiz,
+      questions: overview?.others?.countQuestions,
+      answers: overview?.others?.countAnswers,
     },
   ];
   return (
@@ -53,21 +25,34 @@ const DashBoard = () => {
       <div className="title">Analytics DashBoard</div>
       <div className="content">
         <div className="content-left">
-          <div className="child">Total Users</div>
-          <div className="child">Total Quizzes</div>
-          <div className="child">Total Questions</div>
-          <div className="child">Total Answers</div>
+          <div className="child">
+            <span className="text-1">Total Users</span>
+            <span className="text-2">{overview?.users?.total}</span>
+          </div>
+          <div className="child">
+            <span className="text-1">Total Quizzes</span>
+            <span className="text-2">{overview?.others?.countQuiz}</span>
+          </div>
+          <div className="child">
+            <span className="text-1">Total Admins</span>
+            <span className="text-2">{overview?.users?.countAdmin}</span>
+          </div>
+          <div className="child">
+            <span className="text-1">Total Members</span>
+            <span className="text-2">{overview?.users?.countUsers}</span>
+          </div>
         </div>
         <div className="content-right">
           <ResponsiveContainer height="100%" width="100%">
-            <BarChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
+            <BarChart data={data} barGap="20%">
+              {/* <CartesianGrid strokeDasharray="3 3" /> */}
+              {/* <XAxis dataKey="name" /> */}
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="pv" fill="#8884d8" />
-              <Bar dataKey="uv" fill="#82ca9d" />
+              <Bar dataKey="quizzes" fill="#8884d8" />
+              <Bar dataKey="questions" fill="#82ca9d" />
+              <Bar dataKey="answers" fill="#8dd1e1" />
             </BarChart>
           </ResponsiveContainer>
         </div>

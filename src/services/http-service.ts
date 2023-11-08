@@ -72,6 +72,16 @@ class HttpService {
     return { response, cancel: () => controller.abort() };
   }
 
+  getDetailObject<T>() {
+    const controller = new AbortController();
+
+    const response = apiClient.get<DataStructure<T>>(this.endpoint, {
+      signal: controller.signal,
+    });
+
+    return { response, cancel: () => controller.abort() };
+  }
+
   delete(id: number) {
     return apiClient.delete(this.endpoint, { data: { id: id } });
   }
